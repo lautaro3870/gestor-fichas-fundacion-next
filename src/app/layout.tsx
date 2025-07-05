@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { StyledRoot } from './StyledRoot';
+import { ApolloProvider } from '@apollo/client';
+import client from '@/lib/apolloClient';
+import ApolloWrapper from '@/lib/ApolloWrapper';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -15,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <AppRouterCacheProvider>
-          <StyledRoot>{children}</StyledRoot>
-        </AppRouterCacheProvider>
+        <ApolloWrapper>
+          <AppRouterCacheProvider>
+            <StyledRoot>{children}</StyledRoot>
+          </AppRouterCacheProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );
