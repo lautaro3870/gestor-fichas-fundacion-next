@@ -1,8 +1,6 @@
 import type { Metadata } from 'next';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { StyledRoot } from './StyledRoot';
-import { ApolloProvider } from '@apollo/client';
-import client from '@/lib/apolloClient';
 import ApolloWrapper from '@/lib/ApolloWrapper';
 
 export const metadata: Metadata = {

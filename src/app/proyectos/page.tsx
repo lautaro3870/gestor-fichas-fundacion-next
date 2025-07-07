@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Swal from 'sweetalert2';
+import NavigationBar from '../components/NavigationBar';
 
 export default function Proyectos() {
   const router = useRouter();
@@ -32,8 +33,10 @@ export default function Proyectos() {
   }, [loading]);
 
   return (
-    <div>
-      <h1>proyectos</h1>
-    </div>
+    <>
+      <nav>
+        <NavigationBar />
+      </nav>
+    </>
   );
 }
