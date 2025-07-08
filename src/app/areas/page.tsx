@@ -11,7 +11,7 @@ import {
   UPDATE_AREA,
 } from '@/lib/schemas';
 import { Area, Column } from '@/lib/interfaces';
-import { Button, Input } from '@mui/material';
+import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
@@ -60,7 +60,7 @@ export default function Areas() {
 
   const handleEditArea = async (id: number) => {
     const response = await getArea({ variables: { areaId: id } });
-    const area = response.data.area.area;
+    const area = response.data.getArea.area;
 
     Swal.fire({
       title: 'Editar area',
@@ -70,6 +70,10 @@ export default function Areas() {
       cancelButtonText: 'Cancelar',
       showCancelButton: true,
       preConfirm: async (e) => {
+        if (!e) {
+          Swal.showValidationMessage('El campo no puede estar vacío');
+          return;
+        }
         await updateAreaMutation({
           variables: {
             updateArea: {
@@ -91,7 +95,10 @@ export default function Areas() {
       });
       setAreas(response.data.deleteArea);
     } catch (err) {
-      console.error('Error al eliminar área:', err);
+      Swal.fire({
+        icon: 'info',
+        title: 'Error al eliminar el area',
+      });
     }
   };
 
@@ -116,7 +123,7 @@ export default function Areas() {
   };
 
   useEffect(() => {
-    setAreas(data ? data.areas : []);
+    setAreas(data ? data.getAreas : []);
   }, [data]);
 
   useEffect(() => {

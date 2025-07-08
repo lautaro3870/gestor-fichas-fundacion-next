@@ -12,9 +12,10 @@ export const LOGIN = gql`
   }
 `;
 
+// AREAS
 export const GET_AREAS = gql`
-  query Areas {
-    areas {
+  query GetAreas {
+    getAreas {
       id
       area
       activo
@@ -33,8 +34,8 @@ export const DELETE_AREA = gql`
 `;
 
 export const GET_AREA = gql`
-  query Area($areaId: Int!) {
-    area(id: $areaId) {
+  query GetArea($areaId: Int!) {
+    getArea(areaId: $areaId) {
       id
       area
       activo
