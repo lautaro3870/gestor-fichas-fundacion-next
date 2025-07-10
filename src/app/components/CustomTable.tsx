@@ -1,9 +1,9 @@
-import { Area, Column, Personal } from '@/lib/interfaces';
-import { Box, Button, CircularProgress } from '@mui/material';
+import { Area, Column, PersonalInterface } from '@/lib/interfaces';
+import { Box, CircularProgress } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 type CustomTableProps = {
-  data: Area[] | Personal[];
+  data: Area[] | PersonalInterface[];
   columns: Column[];
   cargando: boolean;
 };

@@ -62,3 +62,63 @@ export const CREATE_AREA = gql`
     }
   }
 `;
+
+// PERSONAL
+export const GET_PERSONAL = gql`
+  query GetOnePersonal($getOnePersonalId: Int!) {
+    getOnePersonal(id: $getOnePersonalId) {
+      id
+      nombre
+      activo
+      foto
+      perfil
+    }
+  }
+`;
+
+export const GET_PERSONALES = gql`
+  query GetPersonal {
+    getPersonal {
+      id
+      nombre
+      activo
+      foto
+      perfil
+    }
+  }
+`;
+export const UPDATE_PERSONAL = gql`
+  mutation UpdatePersonal($updatePersonal: UpdatePersonal!) {
+    updatePersonal(updatePersonal: $updatePersonal) {
+      id
+      nombre
+      activo
+      foto
+      perfil
+    }
+  }
+`;
+
+export const DELETE_PERSONAL = gql`
+  mutation DeletePersonal($deletePersonalId: Int!) {
+    deletePersonal(id: $deletePersonalId) {
+      id
+      nombre
+      activo
+      foto
+      perfil
+    }
+  }
+`;
+
+export const CREATE_PERSONAL = gql`
+  mutation CreatePersonal($createPersonal: CreatePersonal!) {
+    createPersonal(createPersonal: $createPersonal) {
+      id
+      nombre
+      activo
+      foto
+      perfil
+    }
+  }
+`;

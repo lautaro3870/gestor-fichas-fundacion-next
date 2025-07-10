@@ -5,7 +5,7 @@ import {
   CardMedia,
   CircularProgress,
   FormControl,
-  Input,
+  TextField,
 } from '@mui/material';
 import LoginHook from './hooks/LoginHook';
 
@@ -33,18 +33,19 @@ export default function Login() {
         }}
       />
       <FormControl sx={{ width: '20rem' }}>
-        <Input
+        <TextField
           id="email"
           type="email"
           required
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          size='small'
         />
         <br />
       </FormControl>
       <FormControl sx={{ width: '20rem' }}>
-        <Input
+        <TextField
           type="password"
           id="password"
           required
@@ -56,6 +57,7 @@ export default function Login() {
               login();
             }
           }}
+          size='small'
         />
         <br />
       </FormControl>

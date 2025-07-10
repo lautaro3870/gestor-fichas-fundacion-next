@@ -42,10 +42,11 @@ export default function CustomInput({
         }}
         sx={{ width: '15rem' }}
         error={error}
+        size='small'
       />
       <Button
         variant="outlined"
-        sx={{ marginLeft: '1rem', height: '3.5rem' }}
+        sx={{ marginLeft: '1rem', height: '2.5rem' }}
         onClick={handleClick}
       >
         Añadir

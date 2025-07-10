@@ -13,7 +13,7 @@ export interface Column {
   renderCell?: (params: GridRenderCellParams) => JSX.Element;
 }
 
-export interface Personal {
+export interface PersonalInterface {
   id: number;
   nombre: string;
   activo: boolean;

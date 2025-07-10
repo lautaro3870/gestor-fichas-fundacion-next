@@ -74,7 +74,7 @@ export default function Areas() {
           Swal.showValidationMessage('El campo no puede estar vacío');
           return;
         }
-        await updateAreaMutation({
+        const response = await updateAreaMutation({
           variables: {
             updateArea: {
               area: e,
@@ -82,6 +82,7 @@ export default function Areas() {
             },
           },
         });
+        setAreas(response.data.updateArea);
       },
     });
   };
