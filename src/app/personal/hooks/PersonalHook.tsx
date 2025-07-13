@@ -1,12 +1,11 @@
 'use client';
 import { ErrorInput, PersonalInterface } from '@/lib/interfaces';
 import { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import {
   CREATE_PERSONAL,
   DELETE_PERSONAL,
-  GET_PERSONAL,
   GET_PERSONALES,
   UPDATE_PERSONAL,
 } from '@/lib/schemas';
@@ -14,6 +13,8 @@ import Swal from 'sweetalert2';
 
 export default function PersonalHook() {
   const [personales, setPersonales] = useState<PersonalInterface[]>();
+  const [personalesFiltrados, setPersonalesFiltrados] =
+    useState<PersonalInterface[]>();
   const [personal, setPersonal] = useState('');
   const [errorInput, setErrorInput] = useState<ErrorInput>({
     errorInput: false,
@@ -23,15 +24,15 @@ export default function PersonalHook() {
   const [deletePersonal] = useMutation(DELETE_PERSONAL);
   const [updatePersonalMutation] = useMutation(UPDATE_PERSONAL);
   const [createPersonal] = useMutation(CREATE_PERSONAL);
-  const [getPersonal] = useLazyQuery(GET_PERSONAL);
   const router = useRouter();
 
+  const normalizeString = (str: string) =>
+    str
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase();
+
   const validateIfPersonalExists = (value: string) => {
-    const normalizeString = (str: string) =>
-      str
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .toLowerCase();
     return personales?.some(
       (p: PersonalInterface) =>
         normalizeString(p.nombre) === normalizeString(value)
@@ -39,7 +40,9 @@ export default function PersonalHook() {
   };
 
   const handleEditPersonal = async (id: number) => {
-    const { nombre } = data.getPersonal.find((p: PersonalInterface) => p.id === id);
+    const { nombre } = data.getPersonal.find(
+      (p: PersonalInterface) => p.id === id
+    );
 
     Swal.fire({
       title: 'Editar personal',
@@ -131,8 +134,24 @@ export default function PersonalHook() {
     });
   };
 
+  const handleSearch = (e: any) => {
+    const { value } = e.target;
+    
+    if (value.trim() === '') {
+      setPersonalesFiltrados(personales);
+      return;
+    }
+
+    const newListPersonal = personales?.filter((p: PersonalInterface) =>
+      normalizeString(p.nombre).includes(normalizeString(value))
+    );
+
+    setPersonalesFiltrados(newListPersonal);
+  };
+
   useEffect(() => {
     setPersonales(data ? data.getPersonal : []);
+    setPersonalesFiltrados(data ? data.getPersonal : []);
   }, [data]);
 
   useEffect(() => {
@@ -153,6 +172,8 @@ export default function PersonalHook() {
     personales,
     loading,
     handleEditPersonal,
-    handleDeletePersonal
+    handleDeletePersonal,
+    handleSearch,
+    personalesFiltrados
   };
 }

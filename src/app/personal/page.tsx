@@ -2,7 +2,7 @@
 import { Column } from '@/lib/interfaces';
 import CustomInput from '../components/CustomInput';
 import NavigationBar from '../components/NavigationBar';
-import { Button } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CustomTable from '../components/CustomTable';
@@ -14,10 +14,11 @@ export default function Personal() {
     handleCreatePersonal,
     errorInput,
     handleChange,
-    personales,
     loading,
     handleEditPersonal,
     handleDeletePersonal,
+    handleSearch,
+    personalesFiltrados,
   } = PersonalHook();
 
   const columns: Column[] = [
@@ -69,11 +70,19 @@ export default function Personal() {
           error={errorInput}
           handleChange={(e) => handleChange(e)}
         />
-        <CustomTable
-          data={personales || []}
-          columns={columns}
-          cargando={loading}
-        />
+        <div>
+          <TextField
+            sx={{ marginLeft: '43rem', top: '2.5rem' }}
+            size="small"
+            placeholder="Buscar"
+            onChange={(e) => handleSearch(e)}
+          />
+          <CustomTable
+            data={personalesFiltrados || []}
+            columns={columns}
+            cargando={loading}
+          />
+        </div>
       </main>
     </>
   );
