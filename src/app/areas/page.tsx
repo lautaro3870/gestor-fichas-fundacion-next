@@ -1,7 +1,7 @@
-'use client'
+'use client';
 import CustomTable from '../components/CustomTable';
 import NavigationBar from '../components/NavigationBar';
-import { Column, } from '@/lib/interfaces';
+import { Column } from '@/lib/interfaces';
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,6 +9,17 @@ import CustomInput from '../components/CustomInput';
 import AreaHook from './hooks/AreaHook';
 
 export default function Areas() {
+  const {
+    area,
+    areas,
+    handleChange,
+    handleCreateArea,
+    handleDeleteArea,
+    handleEditArea,
+    errorInput,
+    loading,
+  } = AreaHook();
+
   const columns: Column[] = [
     {
       field: 'area',
@@ -37,17 +48,6 @@ export default function Areas() {
       },
     },
   ];
-
-  const {
-    area,
-    areas,
-    handleChange,
-    handleCreateArea,
-    handleDeleteArea,
-    handleEditArea,
-    errorInput,
-    loading
-  } = AreaHook();
 
   return (
     <>
