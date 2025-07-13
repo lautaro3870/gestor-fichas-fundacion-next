@@ -122,3 +122,50 @@ export const CREATE_PERSONAL = gql`
     }
   }
 `;
+
+export const GET_PROJECTS_FILTERED = gql`
+  query FilterProjects($filterProject: FilterProject!) {
+    filterProjects(filterProject: $filterProject) {
+      id
+      titulo
+      paisRegion
+      contratante
+      direccion
+      montoContrato
+      numeroContrato
+      mesInicio
+      anioInicio
+      mesFinalizacion
+      anioFinalizacion
+      consultoresAsociados
+      descripcion
+      resultados
+      fichaLista
+      enCurso
+      departamento
+      moneda
+      certConformidad
+      certificadoPor
+      activo
+      link
+      convenio
+      pdf
+      issn
+      isbn
+      cita
+      revista
+      areasxProyecto {
+        area {
+          area
+          id
+        }
+      }
+      equipoxProyecto {
+        personal {
+          nombre
+          id
+        }
+      }
+    }
+  }
+`;
