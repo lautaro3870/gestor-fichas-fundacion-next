@@ -1,21 +1,20 @@
+import { ErrorInput } from '@/lib/interfaces';
 import { Button, TextField } from '@mui/material';
 
 type CustomInputProps = {
   label: string;
   value: string;
-  setValue: (value: any) => void;
   handleClick: () => void;
-  error: boolean;
-  setError: (value: boolean) => void;
+  error: ErrorInput;
+  handleChange: (value: any) => void;
 };
 
 export default function CustomInput({
   label,
   value,
-  setValue,
   handleClick,
   error,
-  setError,
+  handleChange,
 }: CustomInputProps) {
   return (
     <div
@@ -23,7 +22,7 @@ export default function CustomInput({
         display: 'flex',
         flexDirection: 'row',
         justifyItems: 'center',
-        alignItems: 'center',
+        alignItems: 'flex-start',
         marginTop: '3rem',
         backgroundColor: '#f8f8f8',
         padding: '1.5rem',
@@ -37,12 +36,13 @@ export default function CustomInput({
         variant="outlined"
         value={value}
         onChange={(e) => {
-          setValue(e);
-          setError(false);
+
+          handleChange(e);
         }}
         sx={{ width: '15rem' }}
-        error={error}
-        size='small'
+        error={error.errorInput}
+        size="small"
+        helperText={error.errorMessage}
       />
       <Button
         variant="outlined"

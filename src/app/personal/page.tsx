@@ -1,5 +1,5 @@
 'use client';
-import { Column, PersonalInterface } from '@/lib/interfaces';
+import { Column, ErrorInput, PersonalInterface } from '@/lib/interfaces';
 import CustomInput from '../components/CustomInput';
 import NavigationBar from '../components/NavigationBar';
 import { Button } from '@mui/material';
@@ -50,13 +50,28 @@ export default function Personal() {
 
   const [personales, setPersonales] = useState<PersonalInterface[]>();
   const [personal, setPersonal] = useState('');
-  const [errorInput, setErrorInput] = useState(false);
+  const [errorInput, setErrorInput] = useState<ErrorInput>({
+    errorInput: false,
+    errorMessage: '',
+  });
   const { data, loading, error } = useQuery(GET_PERSONALES);
   const [deletePersonal] = useMutation(DELETE_PERSONAL);
   const [updatePersonalMutation] = useMutation(UPDATE_PERSONAL);
   const [createPersonal] = useMutation(CREATE_PERSONAL);
   const [getPersonal] = useLazyQuery(GET_PERSONAL);
   const router = useRouter();
+
+  const validateIfPersonalExists = (value: string) => {
+    const normalizeString = (str: string) =>
+      str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+    return personales?.some(
+      (p: PersonalInterface) =>
+        normalizeString(p.nombre) === normalizeString(value)
+    );
+  };
 
   const handleEditPersonal = async (id: number) => {
     const response = await getPersonal({ variables: { getOnePersonalId: id } });
@@ -72,6 +87,10 @@ export default function Personal() {
       preConfirm: async (e) => {
         if (!e) {
           Swal.showValidationMessage('El campo no puede estar vacío');
+          return;
+        }
+        if (validateIfPersonalExists(e)) {
+          Swal.showValidationMessage('El personal está duplicado');
           return;
         }
         const response = await updatePersonalMutation({
@@ -107,10 +126,20 @@ export default function Personal() {
 
   const handleCreatePersonal = async () => {
     if (personal === '') {
-      setErrorInput(true);
+      setErrorInput({
+        errorInput: true,
+        errorMessage: '',
+      });
       return;
     }
     try {
+      if (validateIfPersonalExists(personal)) {
+        setErrorInput({
+          errorInput: true,
+          errorMessage: 'Personal duplicado',
+        });
+        return;
+      }
       const response = await createPersonal({
         variables: {
           createPersonal: {
@@ -123,8 +152,19 @@ export default function Personal() {
       setPersonales(response.data.createPersonal);
       setPersonal('');
     } catch {
-      setErrorInput(true);
+      setErrorInput({
+        errorInput: true,
+        errorMessage: '',
+      });
     }
+  };
+
+  const handleChange = (value: any) => {
+    setPersonal(value.target.value);
+    setErrorInput({
+      errorInput: false,
+      errorMessage: '',
+    });
   };
 
   useEffect(() => {
@@ -157,10 +197,9 @@ export default function Personal() {
         <CustomInput
           label="Personal"
           value={personal}
-          setValue={(e) => setPersonal(e.target.value)}
           handleClick={handleCreatePersonal}
           error={errorInput}
-          setError={(e) => setErrorInput(e)}
+          handleChange={(e) => handleChange(e)}
         />
         <CustomTable
           data={personales || []}

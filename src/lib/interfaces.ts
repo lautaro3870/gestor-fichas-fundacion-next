@@ -1,4 +1,4 @@
-import { GridRenderCellParams } from "@mui/x-data-grid";
+import { GridRenderCellParams } from '@mui/x-data-grid';
 
 export interface Area {
   id: number;
@@ -17,4 +17,9 @@ export interface PersonalInterface {
   id: number;
   nombre: string;
   activo: boolean;
+}
+
+export interface ErrorInput {
+  errorInput: boolean;
+  errorMessage: string;
 }

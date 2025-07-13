@@ -10,7 +10,7 @@ import {
   GET_AREAS,
   UPDATE_AREA,
 } from '@/lib/schemas';
-import { Area, Column } from '@/lib/interfaces';
+import { Area, Column, ErrorInput } from '@/lib/interfaces';
 import { Button } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -22,7 +22,7 @@ export default function Areas() {
   const columns: Column[] = [
     {
       field: 'area',
-      headerName: 'Area',
+      headerName: 'Área',
       type: 'string',
     },
     {
@@ -50,13 +50,27 @@ export default function Areas() {
 
   const [areas, setAreas] = useState<Area[]>();
   const [area, setArea] = useState('');
-  const [errorInput, setErrorInput] = useState(false);
+  const [errorInput, setErrorInput] = useState<ErrorInput>({
+    errorInput: false,
+    errorMessage: '',
+  });
   const { data, loading, error } = useQuery(GET_AREAS);
   const [deleteArea] = useMutation(DELETE_AREA);
   const [updateAreaMutation] = useMutation(UPDATE_AREA);
   const [createArea] = useMutation(CREATE_AREA);
   const [getArea] = useLazyQuery(GET_AREA);
   const router = useRouter();
+
+  const validateIfAreaExists = (value: string) => {
+    const normalizeString = (str: string) =>
+      str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+    return areas?.some(
+      (area) => normalizeString(area.area) === normalizeString(value)
+    );
+  };
 
   const handleEditArea = async (id: number) => {
     const response = await getArea({ variables: { areaId: id } });
@@ -72,6 +86,10 @@ export default function Areas() {
       preConfirm: async (e) => {
         if (!e) {
           Swal.showValidationMessage('El campo no puede estar vacío');
+          return;
+        }
+        if (validateIfAreaExists(e)) {
+          Swal.showValidationMessage('El área está duplicada');
           return;
         }
         const response = await updateAreaMutation({
@@ -98,17 +116,27 @@ export default function Areas() {
     } catch (err) {
       Swal.fire({
         icon: 'info',
-        title: 'Error al eliminar el area',
+        title: 'Error al eliminar el área',
       });
     }
   };
 
   const handleCreateArea = async () => {
     if (area === '') {
-      setErrorInput(true);
+      setErrorInput({
+        errorInput: true,
+        errorMessage: '',
+      });
       return;
     }
     try {
+      if (validateIfAreaExists(area)) {
+        setErrorInput({
+          errorInput: true,
+          errorMessage: 'Área duplicada',
+        });
+        return;
+      }
       const response = await createArea({
         variables: {
           createArea: {
@@ -119,8 +147,19 @@ export default function Areas() {
       setAreas(response.data.createArea);
       setArea('');
     } catch {
-      setErrorInput(true);
+      setErrorInput({
+        errorInput: true,
+        errorMessage: '',
+      });
     }
+  };
+
+  const handleChange = (value: any) => {
+    setArea(value.target.value);
+    setErrorInput({
+      errorInput: false,
+      errorMessage: '',
+    });
   };
 
   useEffect(() => {
@@ -151,12 +190,11 @@ export default function Areas() {
         }}
       >
         <CustomInput
-          label="Area"
+          label="Área"
           value={area}
-          setValue={(e) => setArea(e.target.value)}
           handleClick={handleCreateArea}
           error={errorInput}
-          setError={(e) => setErrorInput(e)}
+          handleChange={(e) => handleChange(e)}
         />
         <CustomTable data={areas || []} columns={columns} cargando={loading} />
       </main>
