@@ -23,3 +23,14 @@ export interface ErrorInput {
   errorInput: boolean;
   errorMessage: string;
 }
+
+export interface FilterInterface {
+  departamento: string | null;
+  anioFinalizacion: number | null;
+  anioInicio: number | null;
+  areas: number[] | null;
+  pais: string | null;
+  titulo: string | null;
+  link: null;
+  pdf: null;
+}

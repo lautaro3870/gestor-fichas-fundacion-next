@@ -1,4 +1,5 @@
 'use client';
+import { FilterInterface } from '@/lib/interfaces';
 import { GET_PROJECTS_FILTERED } from '@/lib/schemas';
 import { useQuery } from '@apollo/client';
 import { useRouter } from 'next/navigation';
@@ -7,7 +8,10 @@ import Swal from 'sweetalert2';
 
 export default function ProyectosHook() {
   const [projects, setProjects] = useState([]);
+  const [filter, setFilter] = useState<FilterInterface | null>(null);
+
   const router = useRouter();
+
   const { loading, error, data } = useQuery(GET_PROJECTS_FILTERED, {
     variables: {
       filterProject: {
@@ -16,8 +20,9 @@ export default function ProyectosHook() {
         anioInicio: null,
         areas: null,
         pais: null,
-        personal: null,
         titulo: null,
+        link: null,
+        pdf: null,
       },
     },
   });
@@ -43,5 +48,5 @@ export default function ProyectosHook() {
     }
   }, [loading]);
 
-  return { projects };
+  return { projects, filter, setFilter };
 }

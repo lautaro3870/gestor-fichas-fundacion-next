@@ -7,9 +7,10 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PrintIcon from '@mui/icons-material/Print';
+import Filter from '../components/Filter/Filter';
 
 export default function Proyectos() {
-  const { projects } = ProyectosHook();
+  const { projects, filter, setFilter } = ProyectosHook();
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
@@ -24,7 +25,7 @@ export default function Proyectos() {
             whiteSpace: 'normal',
             wordBreak: 'break-word',
             textAlign: 'left',
-            width: '100%', // Que use todo el ancho disponible
+            width: '100%',
           }}
         >
           {params.value}
@@ -88,8 +89,14 @@ export default function Proyectos() {
       headerName: 'Acciones',
       type: 'string',
       flex: 1,
+      align: 'center',
       renderCell: () => (
-        <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           <Button variant="contained" sx={{ marginBottom: '0.5rem' }}>
             <EditIcon />
           </Button>
@@ -124,14 +131,13 @@ export default function Proyectos() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100vh',
+          flexDirection: 'column',
         }}
       >
+        <Filter filter={filter} setFilter={setFilter} />
         <Box
           sx={{
-            height: '50rem',
-            width: '90%',
-            marginTop: '10rem',
+            width: '100%',
           }}
         >
           <DataGrid
@@ -148,7 +154,7 @@ export default function Proyectos() {
             disableRowSelectionOnClick
             getRowHeight={() => 'auto'}
             sx={{
-              marginBottom: '3rem',
+              height: '75%',
               '& .MuiDataGrid-cell': {
                 whiteSpace: 'normal',
                 wordBreak: 'break-word',
