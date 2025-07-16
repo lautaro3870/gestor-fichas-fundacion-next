@@ -1,31 +1,55 @@
 'use client';
-import { FilterInterface } from '@/lib/interfaces';
-import { GET_PROJECTS_FILTERED } from '@/lib/schemas';
-import { useQuery } from '@apollo/client';
+import { Area, CustomSelectInterface, FilterInterface } from '@/lib/interfaces';
+import { GET_AREAS, GET_PROJECTS_FILTERED } from '@/lib/schemas';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
 export default function ProyectosHook() {
   const [projects, setProjects] = useState([]);
-  const [filter, setFilter] = useState<FilterInterface | null>(null);
+  const [areasMapped, setAreasMapped] = useState<CustomSelectInterface[]>([]);
+  const [filter, setFilter] = useState<FilterInterface>({
+    departamento: null,
+    anioFinalizacion: null,
+    anioInicio: null,
+    areas: null,
+    pais: null,
+    titulo: null,
+    link: null,
+    pdf: null,
+  });
 
   const router = useRouter();
 
-  const { loading, error, data } = useQuery(GET_PROJECTS_FILTERED, {
+  const departamentos: CustomSelectInterface[] = [
+    {
+      id: 'energia',
+      value: 'Energía',
+    },
+    {
+      id: 'made',
+      value: 'MADE',
+    },
+    {
+      id: 'asc',
+      value: 'ASC',
+    },
+  ];
+
+  const {
+    loading: loadingProjects,
+    error: errorProjects,
+    data: dataProjects,
+  } = useQuery(GET_PROJECTS_FILTERED, {
     variables: {
-      filterProject: {
-        departamento: null,
-        anioFinalizacion: null,
-        anioInicio: null,
-        areas: null,
-        pais: null,
-        titulo: null,
-        link: null,
-        pdf: null,
-      },
+      filterProject: filter,
     },
   });
+
+  const [getProjects] = useLazyQuery(GET_PROJECTS_FILTERED);
+
+  const { data: dataAreas, loading: loadingAreas } = useQuery(GET_AREAS);
 
   useEffect(() => {
     const token = window.localStorage.getItem('token');
@@ -35,18 +59,39 @@ export default function ProyectosHook() {
   }, []);
 
   useEffect(() => {
-    if (error && error.cause?.message === 'Unauthorized') {
+    const getProjectsFiltered = async () => {
+      const r = await getProjects({
+        variables: {
+          filterProject: filter,
+        },
+      });
+    };
+    getProjectsFiltered();
+  }, [filter]);
+
+  useEffect(() => {
+    if (errorProjects?.cause?.message === 'Unauthorized') {
       Swal.fire({
         icon: 'info',
         title: 'Sesión expirada',
-      });
-      router.push('/login');
-    } else {
-      if (!loading) {
-        setProjects(data.filterProjects);
-      }
+      }).then(() => router.push('/login'));
+      return;
     }
-  }, [loading]);
 
-  return { projects, filter, setFilter };
+    if (!loadingProjects && dataProjects?.filterProjects) {
+      setProjects(dataProjects.filterProjects);
+    }
+
+    if (!loadingAreas && dataAreas?.getAreas) {
+      const finalAreas: CustomSelectInterface[] = dataAreas?.getAreas.map(
+        (a: any) => ({
+          id: a.id,
+          value: a.area,
+        })
+      );
+      setAreasMapped(finalAreas);
+    }
+  }, [loadingProjects, errorProjects, dataProjects, loadingAreas, dataAreas]);
+
+  return { projects, filter, setFilter, areasMapped, departamentos };
 }

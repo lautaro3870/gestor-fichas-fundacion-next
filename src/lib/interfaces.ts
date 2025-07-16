@@ -24,13 +24,18 @@ export interface ErrorInput {
   errorMessage: string;
 }
 
+export interface CustomSelectInterface {
+  id: string | number;
+  value: string | boolean;
+}
+
 export interface FilterInterface {
   departamento: string | null;
   anioFinalizacion: number | null;
   anioInicio: number | null;
-  areas: number[] | null;
+  areas: CustomSelectInterface[] | null;
   pais: string | null;
   titulo: string | null;
-  link: null;
-  pdf: null;
+  link: boolean | null;
+  pdf: boolean | null;
 }
