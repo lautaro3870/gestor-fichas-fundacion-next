@@ -30,6 +30,7 @@ export default function Filter({
   const [areas, setAreas] = useState<CustomSelectInterface[]>([]);
   const [pdf, setPdf] = useState('');
   const [link, setLink] = useState('');
+  const [errorDates, setErrorDates] = useState('');
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -46,6 +47,7 @@ export default function Filter({
       formRef.current.reset();
     }
 
+    setErrorDates('');
     setAreas([]);
     setDepartamento('');
     setPdf('');
@@ -68,19 +70,24 @@ export default function Filter({
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
+    const anioInicio = Number(formData.get('anioDesde')) || null;
+    const anioFinalizacion = Number(formData.get('anioHasta')) || null;
+
+    if (Number(anioFinalizacion) < Number(anioInicio)) {
+      setErrorDates('Error en las fechas');
+      return;
+    }
+
     const newFilter: FilterInterface = {
       titulo: formData.get('titulo')?.toString() || null,
-      anioFinalizacion: Number(formData.get('anioHasta')) || null,
-      anioInicio: Number(formData.get('anioDesde')) || null,
+      anioFinalizacion,
+      anioInicio,
       areas: areas || null,
       departamento: departamento || null,
       link: Boolean(link) || null,
       pdf: Boolean(pdf) || null,
       pais: formData.get('pais')?.toString() || null,
     };
-
-    formData.set('titulo', '');
-
     setFilter(newFilter);
   };
 
@@ -115,6 +122,9 @@ export default function Filter({
         sx={{
           width: { xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' },
         }}
+        error={Boolean(errorDates)}
+        onChange={() => setErrorDates('')}
+        helperText={errorDates}
       />
       <TextField
         className="text-field"
@@ -125,6 +135,9 @@ export default function Filter({
         sx={{
           width: { xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' },
         }}
+        error={Boolean(errorDates)}
+        onChange={() => setErrorDates('')}
+        helperText={errorDates}
       />
       <TextField
         className="text-field"
@@ -191,14 +204,18 @@ export default function Filter({
           </MenuItem>
         </Select>
       </FormControl>
-      <Button type="submit" variant="contained" sx={{ marginLeft: '0.2rem' }}>
+      <Button
+        type="submit"
+        variant="contained"
+        sx={{ marginLeft: '0.2rem', height: '2.5rem' }}
+      >
         <SearchIcon />
       </Button>
       <Button
         type="button"
         variant="contained"
         color="error"
-        sx={{ marginLeft: '0.2rem' }}
+        sx={{ marginLeft: '0.2rem', height: '2.5rem' }}
         onClick={handleCleanFilters}
       >
         <ClearIcon />
@@ -207,7 +224,7 @@ export default function Filter({
         type="button"
         variant="contained"
         color="inherit"
-        sx={{ marginLeft: '0.2rem' }}
+        sx={{ marginLeft: '0.2rem', height: '2.5rem' }}
       >
         <PrintIcon />
       </Button>
