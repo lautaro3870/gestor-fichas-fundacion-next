@@ -40,7 +40,7 @@ export default function CustomSelect({
         sx={{ width: { xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' } }}
         size="small"
         name={selectName}
-        value={selectValue}
+        value={selectValue || ''}
         onChange={(e: any) => handleSelectChange(e.target.value, selectName)}
         label={selectName}
         multiple={selectName === 'areas'}

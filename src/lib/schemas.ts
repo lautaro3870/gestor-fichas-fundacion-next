@@ -169,3 +169,50 @@ export const GET_PROJECTS_FILTERED = gql`
     }
   }
 `;
+
+export const DELETE_PROJECT = gql`
+  mutation DeleteProject($deleteProjectId: Int!) {
+    deleteProject(id: $deleteProjectId) {
+      id
+      titulo
+      paisRegion
+      contratante
+      direccion
+      montoContrato
+      numeroContrato
+      mesInicio
+      anioInicio
+      mesFinalizacion
+      anioFinalizacion
+      consultoresAsociados
+      descripcion
+      resultados
+      fichaLista
+      enCurso
+      departamento
+      moneda
+      certConformidad
+      certificadoPor
+      activo
+      link
+      convenio
+      pdf
+      issn
+      isbn
+      cita
+      revista
+      areasxProyecto {
+        area {
+          area
+          id
+        }
+      }
+      equipoxProyecto {
+        personal {
+          nombre
+          id
+        }
+      }
+    }
+  }
+`;

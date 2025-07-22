@@ -10,7 +10,15 @@ import PrintIcon from '@mui/icons-material/Print';
 import Filter from '../components/Filter/Filter';
 
 export default function Proyectos() {
-  const { projects, filter, setFilter, areasMapped, departamentos, getProjectsFiltered } = ProyectosHook();
+  const {
+    projects,
+    filter,
+    setFilter,
+    areasMapped,
+    departamentos,
+    getProjectsFiltered,
+    handleDeleteProject,
+  } = ProyectosHook();
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
@@ -90,7 +98,7 @@ export default function Proyectos() {
       type: 'string',
       flex: 1,
       align: 'center',
-      renderCell: () => (
+      renderCell: (params) => (
         <Box
           sx={{
             display: 'flex',
@@ -104,6 +112,9 @@ export default function Proyectos() {
             variant="contained"
             color="error"
             sx={{ marginBottom: '0.5rem' }}
+            onClick={() =>
+              handleDeleteProject((params.row as { id: number }).id)
+            }
           >
             <DeleteIcon />
           </Button>
@@ -119,7 +130,18 @@ export default function Proyectos() {
     },
   ];
 
-  const rows = projects;
+  const rows: Array<{
+    id: number;
+    titulo: string;
+    paisRegion: string;
+    anioInicio: number;
+    anioFinalizacion: number;
+    montoContrato: number;
+    moneda: string;
+    areasxProyecto: Array<{ area: { area: string } }>;
+    departamento: string;
+    contratante: string;
+  }> = projects;
 
   return (
     <>
