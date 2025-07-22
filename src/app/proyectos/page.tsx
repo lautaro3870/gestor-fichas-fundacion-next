@@ -10,7 +10,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import Filter from '../components/Filter/Filter';
 
 export default function Proyectos() {
-  const { projects, filter, setFilter, areasMapped, departamentos } = ProyectosHook();
+  const { projects, filter, setFilter, areasMapped, departamentos, getProjectsFiltered } = ProyectosHook();
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
@@ -139,6 +139,7 @@ export default function Proyectos() {
           setFilter={setFilter}
           areasMapped={areasMapped}
           departamentos={departamentos}
+          getProjectsFiltered={getProjectsFiltered}
         />
         <Box
           sx={{

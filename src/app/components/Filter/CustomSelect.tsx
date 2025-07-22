@@ -3,7 +3,13 @@ import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 type CustomSelectProps = {
   inputLabel: string;
-  selectValue: string | number[] | CustomSelectInterface[] | boolean;
+  selectValue:
+    | string
+    | number[]
+    | CustomSelectInterface[]
+    | boolean
+    | null
+    | undefined;
   selectName: string;
   selectItems: CustomSelectInterface[];
   handleSelectChange: (e: any, selectName: string) => void;

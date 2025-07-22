@@ -37,37 +37,55 @@ export default function ProyectosHook() {
     },
   ];
 
-  const {
-    loading: loadingProjects,
-    error: errorProjects,
-    data: dataProjects,
-  } = useQuery(GET_PROJECTS_FILTERED, {
-    variables: {
-      filterProject: filter,
-    },
-  });
+  const getProjectsFiltered = async (newFilter: FilterInterface) => {
+    const response = await getProjects({
+      variables: {
+        filterProject: newFilter,
+      },
+    });
+    setProjects(response.data.filterProjects);
+  };
 
-  const [getProjects] = useLazyQuery(GET_PROJECTS_FILTERED);
+  const [
+    getProjects,
+    { loading: loadingProjects, error: errorProjects, data: dataProjects },
+  ] = useLazyQuery(GET_PROJECTS_FILTERED);
 
   const { data: dataAreas, loading: loadingAreas } = useQuery(GET_AREAS);
 
+  // revisar de cobtrolar cuando hay un error en el back
   useEffect(() => {
     const token = window.localStorage.getItem('token');
     if (!token) {
       router.push('/login');
+    } else {
+      const stored = window.localStorage.getItem('filter');
+      if (stored) {
+        try {
+          const getProjectsFiltered = async () => {
+            await getProjects({
+              variables: {
+                filterProject: JSON.parse(stored || '{}'),
+              },
+            });
+          };
+          getProjectsFiltered();
+          setFilter(JSON.parse(stored || '{}'));
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        const getProjectsFiltered = async () => {
+          await getProjects({
+            variables: {
+              filterProject: filter,
+            },
+          });
+        };
+        getProjectsFiltered();
+      }
     }
   }, []);
-
-  useEffect(() => {
-    const getProjectsFiltered = async () => {
-      const r = await getProjects({
-        variables: {
-          filterProject: filter,
-        },
-      });
-    };
-    getProjectsFiltered();
-  }, [filter]);
 
   useEffect(() => {
     if (errorProjects?.cause?.message === 'Unauthorized') {
@@ -93,5 +111,12 @@ export default function ProyectosHook() {
     }
   }, [loadingProjects, errorProjects, dataProjects, loadingAreas, dataAreas]);
 
-  return { projects, filter, setFilter, areasMapped, departamentos };
+  return {
+    projects,
+    filter,
+    setFilter,
+    areasMapped,
+    departamentos,
+    getProjectsFiltered,
+  };
 }

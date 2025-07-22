@@ -7,7 +7,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { Dispatch, lazy, SetStateAction, useEffect, useRef, useState } from 'react';
 import CustomSelect from './CustomSelect';
 import PrintIcon from '@mui/icons-material/Print';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -18,6 +18,7 @@ type FilterProps = {
   setFilter: Dispatch<SetStateAction<FilterInterface>>;
   areasMapped: CustomSelectInterface[];
   departamentos: CustomSelectInterface[];
+  getProjectsFiltered: (filter: FilterInterface) => void;
 };
 
 export default function Filter({
@@ -25,6 +26,7 @@ export default function Filter({
   setFilter,
   areasMapped,
   departamentos,
+  getProjectsFiltered,
 }: FilterProps) {
   const [departamento, setDepartamento] = useState('');
   const [areas, setAreas] = useState<CustomSelectInterface[]>([]);
@@ -63,15 +65,23 @@ export default function Filter({
       pdf: null,
       pais: null,
     };
+    window.localStorage.setItem('filter', JSON.stringify(newFilter));
     setFilter(newFilter);
+    getProjectsFiltered(newFilter);
+  };
+
+  const convertBooleanValue = (value: string) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+    return null;
   };
 
   const handleFilter = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
 
-    const anioInicio = Number(formData.get('anioDesde')) || null;
-    const anioFinalizacion = Number(formData.get('anioHasta')) || null;
+    const anioInicio = Number(formData.get('anioInicio')) || null;
+    const anioFinalizacion = Number(formData.get('anioFinalizacion')) || null;
 
     if (Number(anioFinalizacion) < Number(anioInicio)) {
       setErrorDates('Error en las fechas');
@@ -84,12 +94,45 @@ export default function Filter({
       anioInicio,
       areas: areas || null,
       departamento: departamento || null,
-      link: Boolean(link) || null,
-      pdf: Boolean(pdf) || null,
+      link: convertBooleanValue(link),
+      pdf: convertBooleanValue(pdf),
       pais: formData.get('pais')?.toString() || null,
     };
+    window.localStorage.setItem('filter', JSON.stringify(newFilter));
     setFilter(newFilter);
+    setDepartamento(newFilter.departamento || '');
+    setAreas(newFilter.areas || []);
+    setLink(newFilter.link?.toString() || '');
+    setPdf(newFilter.pdf?.toString() || '');
+    getProjectsFiltered(newFilter);
   };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFilter((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const stored = localStorage.getItem('filter');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          setDepartamento(parsed.departamento || null);
+          setAreas(parsed.areas || []);
+          setLink(parsed.link?.toString() || '');
+          setPdf(parsed.pdf?.toString() || '');
+        } catch (e) {
+          console.error('Error al parsear filtro desde localStorage', e);
+        }
+      }
+    }
+  }, []);
 
   return (
     <form
@@ -109,6 +152,8 @@ export default function Filter({
         placeholder="Título"
         size="small"
         name="titulo"
+        value={filter?.titulo || ''}
+        onChange={handleInputChange}
         sx={{
           width: { xs: '8rem', sm: '8rem', md: '8rem', lg: '10rem' },
         }}
@@ -117,26 +162,38 @@ export default function Filter({
         className="text-field"
         placeholder="Año desde"
         size="small"
-        name="anioDesde"
+        name="anioInicio"
         type="number"
+        value={filter?.anioInicio || ''}
         sx={{
-          width: { xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' },
+          width: { xs: '100%', sm: '8rem', md: '8rem', lg: '8rem' },
         }}
         error={Boolean(errorDates)}
-        onChange={() => setErrorDates('')}
+        onChange={(
+          e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        ) => {
+          handleInputChange(e);
+          setErrorDates('');
+        }}
         helperText={errorDates}
       />
       <TextField
         className="text-field"
         placeholder="Año hasta"
         size="small"
-        name="anioHasta"
+        name="anioFinalizacion"
         type="number"
+        value={filter?.anioFinalizacion || ''}
         sx={{
-          width: { xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' },
+          width: { xs: '100%', sm: '8rem', md: '8rem', lg: '8rem' },
         }}
         error={Boolean(errorDates)}
-        onChange={() => setErrorDates('')}
+        onChange={(
+          e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+        ) => {
+          handleInputChange(e);
+          setErrorDates('');
+        }}
         helperText={errorDates}
       />
       <TextField
@@ -144,6 +201,8 @@ export default function Filter({
         placeholder="País/Región"
         size="small"
         name="pais"
+        value={filter?.pais || ''}
+        onChange={handleInputChange}
         sx={{
           width: { xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' },
         }}
@@ -158,7 +217,7 @@ export default function Filter({
       <CustomSelect
         inputLabel="Áreas"
         selectName="areas"
-        selectValue={areas}
+        selectValue={areas || []}
         selectItems={areasMapped}
         handleSelectChange={handleSelectChange}
       />
