@@ -154,6 +154,7 @@ export default function Proyectos() {
           areasMapped={areasMapped}
           departamentos={departamentos}
           getProjectsFiltered={getProjectsFiltered}
+          projects={projects}
         />
         <Box
           sx={{

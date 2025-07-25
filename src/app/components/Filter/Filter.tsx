@@ -1,4 +1,4 @@
-import { CustomSelectInterface, FilterInterface } from '@/lib/interfaces';
+import { CustomSelectInterface, FilterInterface, Project } from '@/lib/interfaces';
 import {
   Button,
   FormControl,
@@ -12,6 +12,7 @@ import CustomSelect from './CustomSelect';
 import PrintIcon from '@mui/icons-material/Print';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
+import PrintHook from '@/app/proyectos/hooks/PrintHook';
 
 type FilterProps = {
   filter: FilterInterface | null;
@@ -19,6 +20,7 @@ type FilterProps = {
   areasMapped: CustomSelectInterface[];
   departamentos: CustomSelectInterface[];
   getProjectsFiltered: (filter: FilterInterface) => void;
+  projects: Project[];
 };
 
 export default function Filter({
@@ -27,6 +29,7 @@ export default function Filter({
   areasMapped,
   departamentos,
   getProjectsFiltered,
+  projects
 }: FilterProps) {
   const [departamento, setDepartamento] = useState('');
   const [areas, setAreas] = useState<CustomSelectInterface[]>([]);
@@ -35,6 +38,8 @@ export default function Filter({
   const [errorDates, setErrorDates] = useState('');
 
   const formRef = useRef<HTMLFormElement>(null);
+
+  const { printProjectsHook } = PrintHook();
 
   const handleSelectChange = (e: any, selectName: string) => {
     if (selectName === 'departamento') {
@@ -133,6 +138,10 @@ export default function Filter({
       }
     }
   }, []);
+
+  const printProjects = () => {
+    printProjectsHook(projects)
+  }
 
   return (
     <form
@@ -284,6 +293,7 @@ export default function Filter({
         variant="contained"
         color="inherit"
         sx={{ marginLeft: '0.2rem', height: '2.5rem' }}
+        onClick={printProjects}
       >
         <PrintIcon />
       </Button>
