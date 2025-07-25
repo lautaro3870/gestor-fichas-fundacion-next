@@ -16,6 +16,10 @@ export interface Column {
 export interface PersonalInterface {
   id: number;
   nombre: string;
+  consultorAsociado: boolean;
+  coordinador: boolean;
+  investigador: boolean;
+  subCoordinador: boolean;
   activo: boolean;
 }
 
@@ -38,4 +42,37 @@ export interface FilterInterface {
   titulo: string | null;
   link: boolean | null;
   pdf: boolean | null;
+}
+
+export interface Project {
+  id: number;
+  titulo: string;
+  paisRegion: string;
+  anioInicio: number;
+  anioFinalizacion: number;
+  montoContrato: number;
+  moneda: string;
+  areasxProyecto: Array<Area>;
+  departamento: string;
+  contratante: string;
+  direccion: string;
+  numeroContrato: string;
+  mesInicio: number;
+  mesFinalizacion: number;
+  consultoresAsociados: string;
+  descripcion: string;
+  resultados: string;
+  fichaLista: boolean;
+  enCurso: boolean;
+  certConformidad: boolean;
+  certificadoPor: number;
+  activo: boolean;
+  link: string;
+  convenio: boolean;
+  pdf: string;
+  issn: string;
+  isbn: string;
+  cita: string;
+  revista: string;
+  equipoxProyecto: PersonalInterface[];
 }

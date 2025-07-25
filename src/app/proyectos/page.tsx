@@ -8,6 +8,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PrintIcon from '@mui/icons-material/Print';
 import Filter from '../components/Filter/Filter';
+import { Project } from '@/lib/interfaces';
 
 export default function Proyectos() {
   const {
@@ -18,6 +19,7 @@ export default function Proyectos() {
     departamentos,
     getProjectsFiltered,
     handleDeleteProject,
+    printOneProject,
   } = ProyectosHook();
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
@@ -122,6 +124,7 @@ export default function Proyectos() {
             variant="contained"
             color="inherit"
             sx={{ marginBottom: '0.5rem' }}
+            onClick={() => printOneProject((params.row as { id: number }).id)}
           >
             <PrintIcon />
           </Button>
@@ -130,18 +133,7 @@ export default function Proyectos() {
     },
   ];
 
-  const rows: Array<{
-    id: number;
-    titulo: string;
-    paisRegion: string;
-    anioInicio: number;
-    anioFinalizacion: number;
-    montoContrato: number;
-    moneda: string;
-    areasxProyecto: Array<{ area: { area: string } }>;
-    departamento: string;
-    contratante: string;
-  }> = projects;
+  const rows: Array<Project> = projects;
 
   return (
     <>

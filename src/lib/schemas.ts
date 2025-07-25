@@ -165,6 +165,10 @@ export const GET_PROJECTS_FILTERED = gql`
           nombre
           id
         }
+        consultorAsociado
+        coordinador
+        investigador
+        subCoordinador
       }
     }
   }
