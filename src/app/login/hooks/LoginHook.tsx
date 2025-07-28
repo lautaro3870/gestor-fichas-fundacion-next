@@ -32,12 +32,19 @@ export default function LoginHook() {
       // revisar porque data la primera vez es undefined aunque el loading haya terminado
       const token = loading ? '' : response.data.login.token;
       window.localStorage.setItem('token', token);
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
-      Swal.fire({
-        icon: 'error',
-        title: 'Usuario y/o contraseña incorrectos',
-      });
+      if (err.message === 'Email/Password do not match') {
+        Swal.fire({
+          icon: 'error',
+          title: 'Usuario y/o contraseña incorrectos',
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error en el sistema',
+        });
+      }
     }
   };
 
