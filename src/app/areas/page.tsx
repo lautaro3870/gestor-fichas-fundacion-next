@@ -69,7 +69,7 @@ export default function Areas() {
           error={errorInput}
           handleChange={(e) => handleChange(e)}
         />
-        <CustomTable data={areas || []} columns={columns} cargando={loading} />
+        <CustomTable data={areas || []} columns={columns} loading={loading} marginTop='4rem'/>
       </main>
     </>
   );

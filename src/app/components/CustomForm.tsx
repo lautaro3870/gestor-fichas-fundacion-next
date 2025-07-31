@@ -6,7 +6,7 @@ import {
   FORM_INPUTS_SECOND_SECTION,
   FORM_INPUTS_THIRD_SECTION,
 } from '@/lib/constants';
-import { Project } from '@/lib/interfaces';
+import { Area, Column, Project } from '@/lib/interfaces';
 import {
   Box,
   Button,
@@ -20,9 +20,12 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import CustomTable from './CustomTable';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 type CustomFormProps = {
   project: Project | {};
+  areas: Area[];
 };
 
 type OptionType = { id: string | number; value: string };
@@ -37,11 +40,11 @@ type InputProps = {
   required?: boolean;
 };
 
-export default function CustomForm({ project }: CustomFormProps) {
+export default function CustomForm({ project, areas }: CustomFormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    console.log(formData.get('consultoresAsociados'));
+    console.log(formData.get('mesFinalizacion'));
   };
 
   const _getInputType = ({
@@ -124,6 +127,34 @@ export default function CustomForm({ project }: CustomFormProps) {
     );
   };
 
+  const handleDeleteArea = (id: number) => {};
+
+  const columns: Column[] = [
+    {
+      field: 'area',
+      headerName: 'Área',
+      type: 'string',
+    },
+    {
+      field: 'acciones',
+      headerName: 'Acciones',
+      type: 'string',
+      renderCell: (params) => {
+        return (
+          <div>
+            <Button
+              onClick={() => handleDeleteArea(params.row.id)}
+              variant="contained"
+              color="error"
+            >
+              <DeleteIcon />
+            </Button>
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -168,7 +199,7 @@ export default function CustomForm({ project }: CustomFormProps) {
             )
           )}
 
-          <Grid size={{ xl: 12, lg: 12, md: 12 }}>
+          <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
             <hr style={{ border: '0.1rem solid rgba(0,0,0,0.2)' }} />
             <Typography variant="h5">Datos del contrato</Typography>
           </Grid>
@@ -264,6 +295,22 @@ export default function CustomForm({ project }: CustomFormProps) {
               </Grid>
             )
           )}
+
+          <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
+            <hr style={{ border: '0.1rem solid rgba(0,0,0,0.2)' }} />
+            <Typography variant="h6">Áreas</Typography>
+          </Grid>
+
+          <Grid size={{ xl: 12, lg: 12, md: 12 }} >
+            <Box >
+              <CustomTable
+                loading={false}
+                columns={columns}
+                data={areas || []}
+                marginTop='0'
+              />
+            </Box>
+          </Grid>
 
           <Grid
             size={{ xs: 12 }}

@@ -5,13 +5,15 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 type CustomTableProps = {
   data: Area[] | PersonalInterface[];
   columns: Column[];
-  cargando: boolean;
+  loading: boolean;
+  marginTop: string;
 };
 
 export default function CustomTable({
   data,
   columns,
-  cargando,
+  loading,
+  marginTop,
 }: CustomTableProps) {
   const dataGridColumns: GridColDef<(typeof rows)[number]>[] = columns.map(
     (column: Column) => ({
@@ -37,19 +39,19 @@ export default function CustomTable({
   return (
     <Box
       sx={{
-        marginTop: '4rem',
+        marginTop: marginTop,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
       }}
     >
-      {cargando ? (
+      {loading ? (
         <CircularProgress />
       ) : (
         <DataGrid
           sx={{
-            width: '55rem',
+            width: '100%',
           }}
           rows={rows}
           columns={dataGridColumns}

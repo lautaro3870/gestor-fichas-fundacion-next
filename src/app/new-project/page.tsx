@@ -15,8 +15,9 @@ export default function NewProject() {
             direccion: '123 hola',
             enCurso: true,
             convenio: true,
-            mesInicio: 3,
+            mesFinalizacion: -1
           }}
+          areas={[]}
         />
       </main>
     </>

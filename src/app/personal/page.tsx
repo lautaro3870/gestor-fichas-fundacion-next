@@ -80,7 +80,8 @@ export default function Personal() {
           <CustomTable
             data={personalesFiltrados || []}
             columns={columns}
-            cargando={loading}
+            loading={loading}
+            marginTop='4rem'
           />
         </div>
       </main>
