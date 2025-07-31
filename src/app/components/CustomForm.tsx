@@ -2,6 +2,7 @@
 import {
   FORM_INPUTS_FIRST_SECTION,
   FORM_INPUTS_SECOND_SECTION,
+  FORM_INPUTS_THIRD_SECTION,
 } from '@/lib/constants';
 import { Project } from '@/lib/interfaces';
 import {
@@ -22,7 +23,7 @@ type CustomFormProps = {
   project: Project | {};
 };
 
-type OptionType = { id: string; value: string };
+type OptionType = { id: string | number; value: string };
 
 type InputProps = {
   type: string | undefined;
@@ -38,7 +39,7 @@ export default function CustomForm({ project }: CustomFormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    console.log(formData.get('enCurso'));
+    console.log(formData.get('mesInicio'));
   };
 
   const _getInputType = ({
@@ -88,6 +89,7 @@ export default function CustomForm({ project }: CustomFormProps) {
     return (
       <TextField
         fullWidth
+        sx={{ input: { color: type === 'url' ? 'blue' : '' } }}
         size="small"
         id={id}
         label={label}
@@ -95,6 +97,11 @@ export default function CustomForm({ project }: CustomFormProps) {
         key={index}
         name={name}
         type={type}
+        onDoubleClick={(e: any) => {
+          if (type === 'url') {
+            window.open(e.target.value, '_blank');
+          }
+        }}
         defaultValue={(project as Record<string, any>)[name] || ''}
       />
     );
@@ -150,6 +157,33 @@ export default function CustomForm({ project }: CustomFormProps) {
           </Grid>
 
           {FORM_INPUTS_SECOND_SECTION.map(
+            (
+              {
+                id,
+                label,
+                required,
+                name,
+                type,
+                options,
+                sizes: { lg, md, xl, sm },
+              },
+              index
+            ) => (
+              <Grid size={{ xl, lg, md, sm }} key={index}>
+                {_getInputType({
+                  type,
+                  index,
+                  label,
+                  name,
+                  id,
+                  options,
+                  required,
+                })}
+              </Grid>
+            )
+          )}
+
+          {FORM_INPUTS_THIRD_SECTION.map(
             (
               {
                 id,
