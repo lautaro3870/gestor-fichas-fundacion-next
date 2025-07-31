@@ -11,14 +11,23 @@ import {
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useRouter } from 'next/navigation';
 
-const pages = ['Areas', 'Personal'];
+const pages = ['Nuevo proyecto', 'Areas', 'Personal'];
 
 export default function NavigationBar() {
   const router = useRouter();
 
   const handleNavigation = (e: any) => {
-    const page = e.target.innerText === 'PERSONAL' ? 'personal' : 'areas';
-    router.push(page);
+    switch (e.target.innerText) {
+      case 'PERSONAL':
+        router.push('/personal');
+        break;
+      case 'AREAS':
+        router.push('/areas');
+        break;
+      case 'NUEVO PROYECTO':
+        router.push('/new-project');
+        break;
+    }
   };
 
   const handleLogout = () => {
