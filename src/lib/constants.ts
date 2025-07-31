@@ -14,6 +14,13 @@ export const SIZES_SECOND_SECTION = {
   sm: 12,
 };
 
+export const SIZES_FOURTH_SECTION = {
+  xl: 3,
+  lg: 3,
+  md: 12,
+  sm: 12,
+};
+
 export const FORM_INPUTS_FIRST_SECTION = [
   {
     id: 'titulo',
@@ -223,5 +230,40 @@ export const FORM_INPUTS_THIRD_SECTION = [
       md: 12,
       sm: 12,
     },
+  },
+];
+
+export const FORM_INPUTS_FOURTH_SECTION = [
+  {
+    id: 'pdf',
+    label: 'PDF',
+    name: 'pdf',
+    type: 'url',
+    required: false,
+    sizes: SIZES_FOURTH_SECTION,
+  },
+  {
+    id: 'isbn',
+    label: 'ISBN',
+    name: 'isbn',
+    type: 'text',
+    required: false,
+    sizes: SIZES_FOURTH_SECTION,
+  },
+  {
+    id: 'issn',
+    label: 'ISSN',
+    name: 'issn',
+    type: 'text',
+    required: false,
+    sizes: SIZES_FOURTH_SECTION,
+  },
+  {
+    id: 'revista',
+    label: 'Revista y/o Libro',
+    name: 'revista',
+    type: 'text',
+    required: false,
+    sizes: SIZES_FOURTH_SECTION,
   },
 ];

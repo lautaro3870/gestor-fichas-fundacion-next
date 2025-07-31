@@ -1,6 +1,7 @@
 'use client';
 import {
   FORM_INPUTS_FIRST_SECTION,
+  FORM_INPUTS_FOURTH_SECTION,
   FORM_INPUTS_SECOND_SECTION,
   FORM_INPUTS_THIRD_SECTION,
 } from '@/lib/constants';
@@ -112,7 +113,7 @@ export default function CustomForm({ project }: CustomFormProps) {
       <form onSubmit={handleSubmit}>
         <Grid
           container
-          spacing={2}
+          spacing={4}
           justifyContent="center"
           alignItems="center"
           sx={{
@@ -204,6 +205,32 @@ export default function CustomForm({ project }: CustomFormProps) {
                   name,
                   id,
                   options,
+                  required,
+                })}
+              </Grid>
+            )
+          )}
+
+          {FORM_INPUTS_FOURTH_SECTION.map(
+            (
+              {
+                id,
+                label,
+                required,
+                name,
+                type,
+                sizes: { lg, md, xl, sm },
+              },
+              index
+            ) => (
+              <Grid size={{ xl, lg, md, sm }} key={index}>
+                {_getInputType({
+                  type,
+                  index,
+                  label,
+                  name,
+                  id,
+                  options: [],
                   required,
                 })}
               </Grid>
