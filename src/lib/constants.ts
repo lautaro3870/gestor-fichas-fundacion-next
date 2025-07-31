@@ -21,6 +21,13 @@ export const SIZES_FOURTH_SECTION = {
   sm: 12,
 };
 
+export const SIZES_FIFTH_SECTION = {
+  xl: 12,
+  lg: 12,
+  md: 12,
+  sm: 12,
+};
+
 export const FORM_INPUTS_FIRST_SECTION = [
   {
     id: 'titulo',
@@ -265,5 +272,32 @@ export const FORM_INPUTS_FOURTH_SECTION = [
     type: 'text',
     required: false,
     sizes: SIZES_FOURTH_SECTION,
+  },
+];
+
+export const FORM_INPUTS_FIFTH_SECTION = [
+  {
+    id: 'consultoresAsociados',
+    label: 'Consultores Asociados',
+    name: 'consultoresAsociados',
+    type: 'area',
+    required: false,
+    sizes: SIZES_FIFTH_SECTION,
+  },
+  {
+    id: 'descripcion',
+    label: 'Descripción',
+    name: 'descripcion',
+    type: 'area',
+    required: false,
+    sizes: SIZES_FIFTH_SECTION,
+  },
+  {
+    id: 'cita',
+    label: 'Cita',
+    name: 'cita',
+    type: 'area',
+    required: false,
+    sizes: SIZES_FIFTH_SECTION,
   },
 ];

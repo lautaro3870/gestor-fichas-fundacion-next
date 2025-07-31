@@ -1,5 +1,6 @@
 'use client';
 import {
+  FORM_INPUTS_FIFTH_SECTION,
   FORM_INPUTS_FIRST_SECTION,
   FORM_INPUTS_FOURTH_SECTION,
   FORM_INPUTS_SECOND_SECTION,
@@ -40,7 +41,7 @@ export default function CustomForm({ project }: CustomFormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    console.log(formData.get('mesInicio'));
+    console.log(formData.get('consultoresAsociados'));
   };
 
   const _getInputType = ({
@@ -84,6 +85,21 @@ export default function CustomForm({ project }: CustomFormProps) {
           }
           label={label}
         />
+      );
+    }
+
+    if (type === 'area') {
+      return (
+        <textarea
+          name={name}
+          placeholder={label}
+          defaultValue={(project as Record<string, any>)[name] || ''}
+          style={{
+            width: '100%',
+            resize: 'vertical', // permite cambiar solo la altura
+            minHeight: '100px', // opcional
+          }}
+        ></textarea>
       );
     }
 
@@ -213,14 +229,26 @@ export default function CustomForm({ project }: CustomFormProps) {
 
           {FORM_INPUTS_FOURTH_SECTION.map(
             (
-              {
-                id,
-                label,
-                required,
-                name,
-                type,
-                sizes: { lg, md, xl, sm },
-              },
+              { id, label, required, name, type, sizes: { lg, md, xl, sm } },
+              index
+            ) => (
+              <Grid size={{ xl, lg, md, sm }} key={index}>
+                {_getInputType({
+                  type,
+                  index,
+                  label,
+                  name,
+                  id,
+                  options: [],
+                  required,
+                })}
+              </Grid>
+            )
+          )}
+
+          {FORM_INPUTS_FIFTH_SECTION.map(
+            (
+              { id, label, required, name, type, sizes: { lg, md, xl, sm } },
               index
             ) => (
               <Grid size={{ xl, lg, md, sm }} key={index}>
