@@ -8,7 +8,7 @@ export default function NewProject() {
         <NavigationBar />
       </nav>
       <main>
-        <CustomForm project={{ titulo: 'pepe', departamento: 'energia', direccion: '123 hola' }} />
+        <CustomForm project={{ titulo: 'pepe', departamento: 'energia', direccion: '123 hola', enCurso: true, convenio: true }} />
       </main>
     </>
   );

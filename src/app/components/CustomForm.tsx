@@ -1,10 +1,15 @@
 'use client';
-import { FORM_INPUTS_FIRST_SECTION } from '@/lib/constants';
+import {
+  FORM_INPUTS_FIRST_SECTION,
+  FORM_INPUTS_SECOND_SECTION,
+} from '@/lib/constants';
 import { Project } from '@/lib/interfaces';
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
+  FormControlLabel,
   Grid,
   InputLabel,
   MenuItem,
@@ -17,12 +22,84 @@ type CustomFormProps = {
   project: Project | {};
 };
 
+type OptionType = { id: string; value: string };
+
+type InputProps = {
+  type: string | undefined;
+  label: string;
+  index: number;
+  name: string;
+  options?: OptionType[];
+  id?: string;
+  required?: boolean;
+};
+
 export default function CustomForm({ project }: CustomFormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    console.log(formData.get('titulo'));
+    console.log(formData.get('enCurso'));
   };
+
+  const _getInputType = ({
+    type,
+    label,
+    index,
+    name,
+    options = [],
+    id,
+    required,
+  }: InputProps) => {
+    if (type === 'select') {
+      return (
+        <FormControl fullWidth size="small" key={index}>
+          <InputLabel>{label}</InputLabel>
+          <Select
+            fullWidth
+            size="small"
+            name={name}
+            label={label}
+            defaultValue={(project as Record<string, any>)[name] || ''}
+          >
+            {options.map(({ id, value }, idx) => (
+              <MenuItem key={idx} value={id}>
+                {value}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    }
+
+    if (type === 'checkbox') {
+      return (
+        <FormControlLabel
+          control={
+            <Checkbox
+              name={name}
+              defaultChecked={(project as Record<string, any>)[name] || false}
+            />
+          }
+          label={label}
+        />
+      );
+    }
+
+    return (
+      <TextField
+        fullWidth
+        size="small"
+        id={id}
+        label={label}
+        required={required}
+        key={index}
+        name={name}
+        type={type}
+        defaultValue={(project as Record<string, any>)[name] || ''}
+      />
+    );
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -54,37 +131,15 @@ export default function CustomForm({ project }: CustomFormProps) {
               index
             ) => (
               <Grid size={{ xl, lg, md, sm }} key={index}>
-                {type === 'select' ? (
-                  <FormControl fullWidth size="small" key={index}>
-                    <InputLabel>{label}</InputLabel>
-                    <Select
-                      fullWidth
-                      size="small"
-                      name={name}
-                      label={label}
-                      defaultValue={
-                        (project as Record<string, any>)[name] || ''
-                      }
-                    >
-                      {options.map(({ id, value }, index) => (
-                        <MenuItem key={index} value={id}>
-                          {value}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                ) : (
-                  <TextField
-                    fullWidth
-                    size="small"
-                    id={id}
-                    label={label}
-                    required={required}
-                    key={index}
-                    name={name}
-                    defaultValue={(project as Record<string, any>)[name] || ''}
-                  />
-                )}
+                {_getInputType({
+                  type,
+                  index,
+                  label,
+                  name,
+                  id,
+                  options,
+                  required,
+                })}
               </Grid>
             )
           )}
@@ -93,6 +148,33 @@ export default function CustomForm({ project }: CustomFormProps) {
             <hr style={{ border: '0.1rem solid rgba(0,0,0,0.2)' }} />
             <Typography variant="h5">Datos del contrato</Typography>
           </Grid>
+
+          {FORM_INPUTS_SECOND_SECTION.map(
+            (
+              {
+                id,
+                label,
+                required,
+                name,
+                type,
+                options,
+                sizes: { lg, md, xl, sm },
+              },
+              index
+            ) => (
+              <Grid size={{ xl, lg, md, sm }} key={index}>
+                {_getInputType({
+                  type,
+                  index,
+                  label,
+                  name,
+                  id,
+                  options,
+                  required,
+                })}
+              </Grid>
+            )
+          )}
 
           <Grid
             size={{ xs: 12 }}
