@@ -6,7 +6,7 @@ import {
   FORM_INPUTS_SECOND_SECTION,
   FORM_INPUTS_THIRD_SECTION,
 } from '@/lib/constants';
-import { Area, Column, Project } from '@/lib/interfaces';
+import { Area, Column, PersonalInterface, Project } from '@/lib/interfaces';
 import {
   Box,
   Button,
@@ -22,10 +22,12 @@ import {
 } from '@mui/material';
 import CustomTable from './CustomTable';
 import DeleteIcon from '@mui/icons-material/Delete';
+import PersonalTable from './PersonalTable';
 
 type CustomFormProps = {
   project: Project | null | {};
   areas: Area[] | undefined;
+  personal: PersonalInterface[] | undefined;
 };
 
 type OptionType = { id: string | number; value: string };
@@ -40,7 +42,7 @@ type InputProps = {
   required?: boolean;
 };
 
-export default function CustomForm({ project, areas }: CustomFormProps) {
+export default function CustomForm({ project, areas, personal }: CustomFormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -158,7 +160,7 @@ export default function CustomForm({ project, areas }: CustomFormProps) {
   const areasRows = areas?.map((a: any) => ({
     id: a.area.id,
     area: a.area.area,
-    activo: true
+    activo: true,
   }));
 
   return (
@@ -301,6 +303,17 @@ export default function CustomForm({ project, areas }: CustomFormProps) {
               </Grid>
             )
           )}
+
+          <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
+            <hr style={{ border: '0.1rem solid rgba(0,0,0,0.2)' }} />
+            <Typography variant="h6">Autores</Typography>
+          </Grid>
+
+          <Grid size={{ xl: 12, lg: 12, md: 12 }}>
+            <Box>
+              <PersonalTable personal={personal}/>
+            </Box>
+          </Grid>
 
           <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
             <hr style={{ border: '0.1rem solid rgba(0,0,0,0.2)' }} />

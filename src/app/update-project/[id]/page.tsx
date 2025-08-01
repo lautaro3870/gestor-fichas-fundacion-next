@@ -51,7 +51,11 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
         {loading ? (
           <CircularProgress />
         ) : (
-          <CustomForm project={project} areas={project?.areasxProyecto} />
+          <CustomForm
+            project={project}
+            areas={project?.areasxProyecto}
+            personal={project?.equipoxProyecto}
+          />
         )}
       </main>
     </>
