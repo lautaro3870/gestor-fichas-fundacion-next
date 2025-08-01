@@ -9,6 +9,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PrintIcon from '@mui/icons-material/Print';
 import Filter from '../components/Filter/Filter';
 import { Project } from '@/lib/interfaces';
+import Link from 'next/link';
 
 export default function Proyectos() {
   const {
@@ -107,9 +108,11 @@ export default function Proyectos() {
             flexDirection: 'column',
           }}
         >
-          <Button variant="contained" sx={{ marginBottom: '0.5rem' }}>
-            <EditIcon />
-          </Button>
+          <Link href={`/update-project/${params.row.id}`}>
+            <Button variant="contained" sx={{ marginBottom: '0.5rem' }}>
+              <EditIcon />
+            </Button>
+          </Link>
           <Button
             variant="contained"
             color="error"

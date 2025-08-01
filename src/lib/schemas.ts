@@ -220,3 +220,54 @@ export const DELETE_PROJECT = gql`
     }
   }
 `;
+
+export const GET_ONE_PROJECT = gql`
+  query FindOneProject($findOneProjectId: Int!) {
+    findOneProject(id: $findOneProjectId) {
+      id
+      titulo
+      paisRegion
+      contratante
+      direccion
+      montoContrato
+      numeroContrato
+      mesInicio
+      anioInicio
+      mesFinalizacion
+      anioFinalizacion
+      consultoresAsociados
+      descripcion
+      resultados
+      fichaLista
+      enCurso
+      departamento
+      moneda
+      certConformidad
+      certificadoPor
+      activo
+      link
+      convenio
+      pdf
+      issn
+      isbn
+      cita
+      revista
+      areasxProyecto {
+        area {
+          id
+          area
+        }
+      }
+      equipoxProyecto {
+        consultorAsociado
+        coordinador
+        investigador
+        subCoordinador
+        personal {
+          id
+          nombre
+        }
+      }
+    }
+  }
+`;

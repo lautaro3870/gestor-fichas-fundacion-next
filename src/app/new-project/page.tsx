@@ -9,14 +9,7 @@ export default function NewProject() {
       </nav>
       <main>
         <CustomForm
-          project={{
-            titulo: 'pepe',
-            departamento: 'energia',
-            direccion: '123 hola',
-            enCurso: true,
-            convenio: true,
-            mesFinalizacion: -1
-          }}
+          project={{}}
           areas={[]}
         />
       </main>

@@ -24,8 +24,8 @@ import CustomTable from './CustomTable';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 type CustomFormProps = {
-  project: Project | {};
-  areas: Area[];
+  project: Project | null | {};
+  areas: Area[] | undefined;
 };
 
 type OptionType = { id: string | number; value: string };
@@ -154,6 +154,12 @@ export default function CustomForm({ project, areas }: CustomFormProps) {
       },
     },
   ];
+
+  const areasRows = areas?.map((a: any) => ({
+    id: a.area.id,
+    area: a.area.area,
+    activo: true
+  }));
 
   return (
     <>
@@ -301,13 +307,13 @@ export default function CustomForm({ project, areas }: CustomFormProps) {
             <Typography variant="h6">Áreas</Typography>
           </Grid>
 
-          <Grid size={{ xl: 12, lg: 12, md: 12 }} >
-            <Box >
+          <Grid size={{ xl: 12, lg: 12, md: 12 }}>
+            <Box>
               <CustomTable
                 loading={false}
                 columns={columns}
-                data={areas || []}
-                marginTop='0'
+                data={areasRows || []}
+                marginTop="0"
               />
             </Box>
           </Grid>
