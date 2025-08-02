@@ -42,7 +42,11 @@ type InputProps = {
   required?: boolean;
 };
 
-export default function CustomForm({ project, areas, personal }: CustomFormProps) {
+export default function CustomForm({
+  project,
+  areas,
+  personal,
+}: CustomFormProps) {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -162,6 +166,10 @@ export default function CustomForm({ project, areas, personal }: CustomFormProps
     area: a.area.area,
     activo: true,
   }));
+
+  const onUpdatePersonalList = (personal: any) => {
+    console.log(personal);
+  };
 
   return (
     <>
@@ -311,7 +319,10 @@ export default function CustomForm({ project, areas, personal }: CustomFormProps
 
           <Grid size={{ xl: 12, lg: 12, md: 12 }}>
             <Box>
-              <PersonalTable personal={personal}/>
+              <PersonalTable
+                personal={personal}
+                onUpdatePersonalList={onUpdatePersonalList}
+              />
             </Box>
           </Grid>
 

@@ -1,20 +1,62 @@
+'use client';
 import { Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { PersonalInterface } from '@/lib/interfaces';
+import { useEffect, useState } from 'react';
 
 type PersonalTableProps = {
   personal: PersonalInterface[] | undefined;
+  onUpdatePersonalList: (PersonalInterface: any) => void;
 };
 
-export default function PersonalTable({ personal }: PersonalTableProps) {
+export default function PersonalTable({
+  personal,
+  onUpdatePersonalList,
+}: PersonalTableProps) {
+  const [personalList, setPersonalList] = useState<
+    PersonalInterface[] | undefined
+  >([]);
+
+  const handleDeletePersonal = (id: number) => {
+    const newList = personal?.filter((p: any) => p.personal.id !== id);
+    setPersonalList(newList);
+    onUpdatePersonalList(newList);
+  };
+
+  const handleRowUpdate = (newRow: any, oldRow: any) => {
+    console.log(personal);
+    const changedField =
+      Object.keys(newRow).find((key) => newRow[key] !== oldRow[key]) || '';
+
+    const changedValue = newRow[changedField];
+
+    const newList = personal?.map((p: any) => {
+      if (p.personal.id === newRow.id) {
+        return {
+          ...p,
+          [changedField]: changedValue,
+        };
+      } else {
+        return p;
+      }
+    });
+    console.log(newList);
+    onUpdatePersonalList(newList);
+    return newRow;
+  };
+
+  useEffect(() => {
+    setPersonalList(personal);
+  }, [personal]);
+
   const columns: GridColDef[] = [
     {
       field: 'nombre',
       headerName: 'Nombre',
       type: 'string',
       width: 250,
-      editable: true,
+      editable: false,
     },
     {
       field: 'consultorAsociado',
@@ -51,7 +93,11 @@ export default function PersonalTable({ personal }: PersonalTableProps) {
       renderCell: (params) => {
         return (
           <div>
-            <Button variant="contained" color="error">
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleDeletePersonal(params.row.id)}
+            >
               <DeleteIcon />
             </Button>
           </div>
@@ -60,7 +106,7 @@ export default function PersonalTable({ personal }: PersonalTableProps) {
     },
   ];
 
-  const rows = personal?.map((p: any) => ({
+  const rows = personalList?.map((p: any) => ({
     id: p.personal.id,
     nombre: p.personal.nombre,
     consultorAsociado: p.consultorAsociado,
@@ -74,6 +120,7 @@ export default function PersonalTable({ personal }: PersonalTableProps) {
       rows={rows}
       columns={columns}
       disableRowSelectionOnClick
+      processRowUpdate={handleRowUpdate}
     />
   );
 }
