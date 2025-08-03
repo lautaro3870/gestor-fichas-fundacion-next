@@ -4,7 +4,7 @@ import CustomForm from '../../components/CustomForm';
 import NavigationBar from '../../components/NavigationBar';
 import { GET_ONE_PROJECT } from '@/lib/schemas';
 import { useEffect, useState } from 'react';
-import { Project } from '@/lib/interfaces';
+import { CreateOrUpdateProject, Project } from '@/lib/interfaces';
 import { CircularProgress } from '@mui/material';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
@@ -51,7 +51,7 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
     },
   });
 
-  const handleFormData = (formData: Project) => {
+  const handleFormData = (formData: CreateOrUpdateProject) => {
     console.log(formData);
   };
 

@@ -23,6 +23,15 @@ export interface PersonalInterface {
   activo: boolean;
 }
 
+export interface CreatePersonal {
+  id: number;
+  nombre: string;
+  consultorAsociado: boolean;
+  coordinador: boolean;
+  investigador: boolean;
+  subCoordinador: boolean;
+}
+
 export interface ErrorInput {
   errorInput: boolean;
   errorMessage: string;
@@ -52,7 +61,7 @@ export interface Project {
   anioFinalizacion: number;
   montoContrato: string;
   moneda: string;
-  areasxProyecto: Array<Area>;
+  areasxProyecto?: Array<Area>;
   departamento: string;
   contratante: string;
   direccion: string;
@@ -74,5 +83,38 @@ export interface Project {
   isbn: string;
   cita: string;
   revista: string;
-  equipoxProyecto: PersonalInterface[];
+  equipoxProyecto?: PersonalInterface[];
+}
+
+export interface CreateOrUpdateProject {
+  id?: number;
+  titulo: string;
+  paisRegion: string;
+  anioInicio: number;
+  anioFinalizacion: number;
+  montoContrato: string;
+  moneda: string;
+  departamento: string;
+  contratante: string;
+  direccion: string;
+  numeroContrato: string;
+  mesInicio: number;
+  mesFinalizacion: number;
+  consultoresAsociados: string;
+  descripcion: string;
+  resultados: string;
+  fichaLista: boolean;
+  enCurso: boolean;
+  certConformidad: boolean;
+  certificadoPor: number;
+  activo: boolean;
+  link: string;
+  convenio: boolean;
+  pdf: string;
+  issn: string;
+  isbn: string;
+  cita: string;
+  revista: string;
+  areas: Array<{ idArea: number }>;
+  equipo: CreatePersonal[];
 }

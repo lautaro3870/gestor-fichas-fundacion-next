@@ -79,11 +79,11 @@ export const FORM_INPUTS_FIRST_SECTION = [
         value: 'Energía',
       },
       {
-        id: 'made',
+        id: 'MADE',
         value: 'MADE',
       },
       {
-        id: 'asc',
+        id: 'ASC',
         value: 'ASC',
       },
     ],

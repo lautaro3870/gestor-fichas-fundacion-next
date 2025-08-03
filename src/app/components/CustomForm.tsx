@@ -6,7 +6,14 @@ import {
   FORM_INPUTS_SECOND_SECTION,
   FORM_INPUTS_THIRD_SECTION,
 } from '@/lib/constants';
-import { Area, Column, PersonalInterface, Project } from '@/lib/interfaces';
+import {
+  Area,
+  Column,
+  CreateOrUpdateProject,
+  CreatePersonal,
+  PersonalInterface,
+  Project,
+} from '@/lib/interfaces';
 import {
   Box,
   Button,
@@ -29,7 +36,7 @@ type CustomFormProps = {
   project: Project;
   areas: Area[] | undefined;
   personal: PersonalInterface[] | undefined;
-  handleFormData: (formData: Project) => void;
+  handleFormData: (formData: CreateOrUpdateProject) => void;
 };
 
 type OptionType = { id: string | number; value: string };
@@ -50,17 +57,47 @@ export default function CustomForm({
   personal,
   handleFormData,
 }: CustomFormProps) {
-  const [formData, setFormData] = useState<Project>({} as Project);
+  const [projectData, setProjectData] = useState<Project>({} as Project);
+  const [formData, setFormData] = useState<CreateOrUpdateProject>(
+    {} as CreateOrUpdateProject
+  );
+
+  const [areasList, setAreasList] = useState<Area[] | undefined>(areas);
+  const [personalList, setPersonalList] = useState<
+    CreatePersonal[] | undefined
+  >(personal);
 
   useEffect(() => {
-    setFormData(project);
-  }, [project]);
+    setFormData(formData);
+    setProjectData(project);
+    setAreasList(
+      areas?.map((a: any) => ({
+        id: a.area.id,
+        area: a.area.area,
+        activo: a.activo,
+      }))
+    );
+    setPersonalList(
+      personal?.map((p: any) => ({
+        id: p.personal.id,
+        nombre: p.personal.nombre,
+        consultorAsociado: p.consultorAsociado,
+        coordinador: p.coordinador,
+        investigador: p.investigador,
+        subCoordinador: p.subCoordinador,
+      }))
+    );
+  }, [project, areas, personal]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // const formData = new FormData(e.currentTarget);
-    // console.log(formData.get('mesFinalizacion'));
-    handleFormData(formData);
+    const { areasxProyecto, equipoxProyecto, ...rest } = projectData;
+    const projectObject: CreateOrUpdateProject = {
+      ...rest,
+      areas: areasList?.map((a: any) => ({ idArea: a.area.id })) || [],
+      equipo: personalList || [],
+    };
+    handleFormData(projectObject);
   };
 
   const _getInputType = ({
@@ -81,9 +118,9 @@ export default function CustomForm({
             size="small"
             name={name}
             label={label}
-            value={formData[name as keyof Project] ?? ''}
+            value={projectData[name as keyof Project] ?? ''}
             onChange={(e) =>
-              setFormData((prev) => ({ ...prev, [name]: e.target.value }))
+              setProjectData((prev) => ({ ...prev, [name]: e.target.value }))
             }
           >
             {options.map(({ id, value }, idx) => (
@@ -102,9 +139,12 @@ export default function CustomForm({
           control={
             <Checkbox
               name={name}
-              value={formData[name as keyof Project] ?? false}
+              value={projectData[name as keyof Project] ?? false}
               onChange={(e) =>
-                setFormData((prev) => ({ ...prev, [name]: e.target.checked }))
+                setProjectData((prev) => ({
+                  ...prev,
+                  [name]: e.target.checked,
+                }))
               }
             />
           }
@@ -144,9 +184,9 @@ export default function CustomForm({
             window.open(e.target.value, '_blank');
           }
         }}
-        value={formData[name as keyof Project] ?? ''}
+        value={projectData[name as keyof Project] ?? ''}
         onChange={(e) =>
-          setFormData((prev) => ({ ...prev, [name]: e.target.value }))
+          setProjectData((prev) => ({ ...prev, [name]: e.target.value }))
         }
       />
     );
@@ -178,16 +218,22 @@ export default function CustomForm({
     },
   ];
 
-  const areasRows = areas?.map((a: any) => ({
-    id: a.area.id,
-    area: a.area.area,
-    activo: true,
-  }));
-
-  const handleDeleteArea = (id: number) => {};
+  const handleDeleteArea = (id: number) => {
+    const newList = areasList?.filter((a: any) => a.id !== id);
+    setAreasList(newList);
+  };
 
   const onUpdatePersonalList = (personal: any) => {
-    console.log(personal);
+    setPersonalList(
+      personal.map((p: any) => ({
+        id: p.personal.id,
+        nombre: p.personal.nombre,
+        consultorAsociado: p.consultorAsociado,
+        coordinador: p.coordinador,
+        investigador: p.investigador,
+        subCoordinador: p.subCoordinador,
+      }))
+    );
   };
 
   return (
@@ -355,7 +401,7 @@ export default function CustomForm({
               <CustomTable
                 loading={false}
                 columns={columns}
-                data={areasRows || []}
+                data={areasList || []}
                 marginTop="0"
               />
             </Box>
@@ -374,7 +420,7 @@ export default function CustomForm({
               sx={{ marginLeft: '2rem' }}
               type="button"
             >
-              Guardar
+              Cancelar
             </Button>
           </Grid>
         </Grid>

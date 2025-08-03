@@ -18,20 +18,23 @@ export default function PersonalTable({
     PersonalInterface[] | undefined
   >([]);
 
+  // useEffect(() => {
+  //   setPersonalList(personal);
+  // }, [personal]);
+
   const handleDeletePersonal = (id: number) => {
-    const newList = personal?.filter((p: any) => p.personal.id !== id);
+    const newList = personalList?.filter((p: any) => p.personal.id !== id);
     setPersonalList(newList);
     onUpdatePersonalList(newList);
   };
 
   const handleRowUpdate = (newRow: any, oldRow: any) => {
-    console.log(personal);
     const changedField =
       Object.keys(newRow).find((key) => newRow[key] !== oldRow[key]) || '';
 
     const changedValue = newRow[changedField];
 
-    const newList = personal?.map((p: any) => {
+    const newList = personalList?.map((p: any) => {
       if (p.personal.id === newRow.id) {
         return {
           ...p,
@@ -41,7 +44,7 @@ export default function PersonalTable({
         return p;
       }
     });
-    console.log(newList);
+    setPersonalList(newList);
     onUpdatePersonalList(newList);
     return newRow;
   };

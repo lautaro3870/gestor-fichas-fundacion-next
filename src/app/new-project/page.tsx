@@ -1,9 +1,12 @@
-import { Project } from '@/lib/interfaces';
+'use client'
+import { CreateOrUpdateProject, Project } from '@/lib/interfaces';
 import CustomForm from '../components/CustomForm';
 import NavigationBar from '../components/NavigationBar';
 
 export default function NewProject() {
-  const handleFormData = (formData: Project) => {}
+  const handleFormData = (formData: CreateOrUpdateProject) => {
+    console.log(formData);
+  }
   return (
     <>
       <nav>
