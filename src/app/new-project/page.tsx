@@ -11,6 +11,7 @@ export default function NewProject() {
         <CustomForm
           project={{}}
           areas={[]}
+          personal={[]}
         />
       </main>
     </>

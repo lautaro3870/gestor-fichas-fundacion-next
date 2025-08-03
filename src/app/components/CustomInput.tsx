@@ -36,7 +36,6 @@ export default function CustomInput({
         variant="outlined"
         value={value}
         onChange={(e) => {
-
           handleChange(e);
         }}
         sx={{ width: '15rem' }}
