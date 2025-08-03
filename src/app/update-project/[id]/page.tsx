@@ -10,7 +10,39 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 
 export default function UpdateProject({ params }: { params: { id: string } }) {
-  const [project, setProject] = useState<Project | null>(null);
+  const [project, setProject] = useState<Project>({
+    id: 0,
+    titulo: '',
+    paisRegion: '',
+    anioInicio: 0,
+    anioFinalizacion: 0,
+    montoContrato: '',
+    moneda: '',
+    areasxProyecto: [],
+    departamento: '',
+    contratante: '',
+    direccion: '',
+    numeroContrato: '',
+    mesInicio: 0,
+    mesFinalizacion: 0,
+    consultoresAsociados: '',
+    descripcion: '',
+    resultados: '',
+    fichaLista: false,
+    enCurso: false,
+    certConformidad: false,
+    certificadoPor: 0,
+    activo: false,
+    link: '',
+    convenio: false,
+    pdf: '',
+    issn: '',
+    isbn: '',
+    cita: '',
+    revista: '',
+    equipoxProyecto: [],
+  });
+
   const router = useRouter();
   const { data, loading, error } = useQuery(GET_ONE_PROJECT, {
     variables: {

@@ -50,7 +50,7 @@ export interface Project {
   paisRegion: string;
   anioInicio: number;
   anioFinalizacion: number;
-  montoContrato: number;
+  montoContrato: string;
   moneda: string;
   areasxProyecto: Array<Area>;
   departamento: string;

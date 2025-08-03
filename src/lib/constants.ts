@@ -75,7 +75,7 @@ export const FORM_INPUTS_FIRST_SECTION = [
     sizes: SIZES_FIRST_SECTION,
     options: [
       {
-        id: 'energia',
+        id: 'ENERGIA',
         value: 'Energía',
       },
       {
@@ -108,7 +108,7 @@ export const FORM_INPUTS_SECOND_SECTION = [
     id: 'montoContrato',
     label: 'Monto',
     name: 'montoContrato',
-    type: 'number',
+    type: 'string',
     required: false,
     sizes: SIZES_SECOND_SECTION,
   },

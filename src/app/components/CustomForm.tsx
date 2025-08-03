@@ -23,9 +23,10 @@ import {
 import CustomTable from './CustomTable';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonalTable from './PersonalTable';
+import { useEffect, useState } from 'react';
 
 type CustomFormProps = {
-  project: Project | null | {};
+  project: Project;
   areas: Area[] | undefined;
   personal: PersonalInterface[] | undefined;
 };
@@ -47,6 +48,12 @@ export default function CustomForm({
   areas,
   personal,
 }: CustomFormProps) {
+  const [formData, setFormData] = useState<Project>({} as Project);
+
+  useEffect(() => {
+    setFormData(project);
+  }, [project]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -71,7 +78,10 @@ export default function CustomForm({
             size="small"
             name={name}
             label={label}
-            defaultValue={(project as Record<string, any>)[name] || ''}
+            value={formData[name as keyof Project] ?? ''}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, [name]: e.target.value }))
+            }
           >
             {options.map(({ id, value }, idx) => (
               <MenuItem key={idx} value={id}>
@@ -105,8 +115,8 @@ export default function CustomForm({
           defaultValue={(project as Record<string, any>)[name] || ''}
           style={{
             width: '100%',
-            resize: 'vertical', // permite cambiar solo la altura
-            minHeight: '100px', // opcional
+            resize: 'vertical',
+            minHeight: '100px',
           }}
         ></textarea>
       );
@@ -331,7 +341,7 @@ export default function CustomForm({
             <Typography variant="h6">Áreas</Typography>
           </Grid>
 
-          <Grid size={{ xl: 12, lg: 12, md: 12 }}>
+          <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
             <Box>
               <CustomTable
                 loading={false}

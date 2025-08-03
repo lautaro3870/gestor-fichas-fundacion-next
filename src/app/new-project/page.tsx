@@ -1,3 +1,4 @@
+import { Project } from '@/lib/interfaces';
 import CustomForm from '../components/CustomForm';
 import NavigationBar from '../components/NavigationBar';
 
@@ -9,7 +10,7 @@ export default function NewProject() {
       </nav>
       <main>
         <CustomForm
-          project={{}}
+          project={{} as Project}
           areas={[]}
           personal={[]}
         />
