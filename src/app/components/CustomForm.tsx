@@ -29,6 +29,7 @@ type CustomFormProps = {
   project: Project;
   areas: Area[] | undefined;
   personal: PersonalInterface[] | undefined;
+  handleFormData: (formData: Project) => void;
 };
 
 type OptionType = { id: string | number; value: string };
@@ -47,6 +48,7 @@ export default function CustomForm({
   project,
   areas,
   personal,
+  handleFormData,
 }: CustomFormProps) {
   const [formData, setFormData] = useState<Project>({} as Project);
 
@@ -56,8 +58,9 @@ export default function CustomForm({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    console.log(formData.get('mesFinalizacion'));
+    // const formData = new FormData(e.currentTarget);
+    // console.log(formData.get('mesFinalizacion'));
+    handleFormData(formData);
   };
 
   const _getInputType = ({
@@ -99,7 +102,10 @@ export default function CustomForm({
           control={
             <Checkbox
               name={name}
-              defaultChecked={(project as Record<string, any>)[name] || false}
+              value={formData[name as keyof Project] ?? false}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, [name]: e.target.checked }))
+              }
             />
           }
           label={label}
@@ -138,12 +144,13 @@ export default function CustomForm({
             window.open(e.target.value, '_blank');
           }
         }}
-        defaultValue={(project as Record<string, any>)[name] || ''}
+        value={formData[name as keyof Project] ?? ''}
+        onChange={(e) =>
+          setFormData((prev) => ({ ...prev, [name]: e.target.value }))
+        }
       />
     );
   };
-
-  const handleDeleteArea = (id: number) => {};
 
   const columns: Column[] = [
     {
@@ -176,6 +183,8 @@ export default function CustomForm({
     area: a.area.area,
     activo: true,
   }));
+
+  const handleDeleteArea = (id: number) => {};
 
   const onUpdatePersonalList = (personal: any) => {
     console.log(personal);

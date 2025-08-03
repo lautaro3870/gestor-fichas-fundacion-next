@@ -3,6 +3,7 @@ import CustomForm from '../components/CustomForm';
 import NavigationBar from '../components/NavigationBar';
 
 export default function NewProject() {
+  const handleFormData = (formData: Project) => {}
   return (
     <>
       <nav>
@@ -13,6 +14,7 @@ export default function NewProject() {
           project={{} as Project}
           areas={[]}
           personal={[]}
+          handleFormData={handleFormData}
         />
       </main>
     </>

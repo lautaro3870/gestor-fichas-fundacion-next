@@ -44,11 +44,16 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
   });
 
   const router = useRouter();
+
   const { data, loading, error } = useQuery(GET_ONE_PROJECT, {
     variables: {
       findOneProjectId: +params.id,
     },
   });
+
+  const handleFormData = (formData: Project) => {
+    console.log(formData);
+  };
 
   useEffect(() => {
     if (error?.message === 'Unauthorized') {
@@ -87,6 +92,7 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
             project={project}
             areas={project?.areasxProyecto}
             personal={project?.equipoxProyecto}
+            handleFormData={handleFormData}
           />
         )}
       </main>
