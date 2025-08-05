@@ -271,3 +271,38 @@ export const GET_ONE_PROJECT = gql`
     }
   }
 `;
+
+export const CREATE_PROJECT = gql`
+  mutation CreateProject($createProject: CreateProjectInput!) {
+    createProject(createProject: $createProject) {
+      id
+      titulo
+      paisRegion
+      contratante
+      direccion
+      montoContrato
+      numeroContrato
+      mesInicio
+      anioInicio
+      mesFinalizacion
+      anioFinalizacion
+      consultoresAsociados
+      descripcion
+      resultados
+      fichaLista
+      enCurso
+      departamento
+      moneda
+      certConformidad
+      certificadoPor
+      activo
+      link
+      convenio
+      pdf
+      issn
+      isbn
+      cita
+      revista
+    }
+  }
+`;

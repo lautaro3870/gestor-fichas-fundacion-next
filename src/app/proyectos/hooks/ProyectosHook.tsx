@@ -1,11 +1,13 @@
 'use client';
 import {
   Area,
+  CreateOrUpdateProject,
   CustomSelectInterface,
   FilterInterface,
   Project,
 } from '@/lib/interfaces';
 import {
+  CREATE_PROJECT,
   DELETE_PROJECT,
   GET_AREAS,
   GET_PROJECTS_FILTERED,
@@ -50,11 +52,22 @@ export default function ProyectosHook() {
     },
   ];
 
+  const [
+    getProjects,
+    { loading: loadingProjects, error: errorProjects, data: dataProjects },
+  ] = useLazyQuery(GET_PROJECTS_FILTERED);
+
+  const { data: dataAreas, loading: loadingAreas } = useQuery(GET_AREAS);
+
+  const [deleteProject] = useMutation(DELETE_PROJECT);
+  const [creatProjectMutation] = useMutation(CREATE_PROJECT);
+
   const getProjectsFiltered = async (newFilter: FilterInterface) => {
     const response = await getProjects({
       variables: {
         filterProject: newFilter,
       },
+      fetchPolicy: 'network-only',
     });
     if (response.data) {
       setProjects(response.data.filterProjects);
@@ -68,15 +81,6 @@ export default function ProyectosHook() {
     }
   };
 
-  const [
-    getProjects,
-    { loading: loadingProjects, error: errorProjects, data: dataProjects },
-  ] = useLazyQuery(GET_PROJECTS_FILTERED);
-
-  const { data: dataAreas, loading: loadingAreas } = useQuery(GET_AREAS);
-
-  const [deleteProject] = useMutation(DELETE_PROJECT);
-
   // revisar de cobtrolar cuando hay un error en el back
   useEffect(() => {
     const token = window.localStorage.getItem('token');
@@ -86,14 +90,7 @@ export default function ProyectosHook() {
       const stored = window.localStorage.getItem('filter');
       if (stored) {
         try {
-          const getProjectsFiltered = async () => {
-            await getProjects({
-              variables: {
-                filterProject: JSON.parse(stored || '{}'),
-              },
-            });
-          };
-          getProjectsFiltered();
+          getProjectsFiltered(JSON.parse(stored || '{}'));
           setFilter(JSON.parse(stored || '{}'));
         } catch (error) {
           console.log(error);
@@ -169,6 +166,14 @@ export default function ProyectosHook() {
     printOneProjectHook(project);
   };
 
+  const createProject = async (formData: CreateOrUpdateProject) => {
+    await creatProjectMutation({
+      variables: {
+        createProject: formData,
+      },
+    });
+  };
+
   return {
     projects,
     filter,
@@ -178,5 +183,6 @@ export default function ProyectosHook() {
     getProjectsFiltered,
     handleDeleteProject,
     printOneProject,
+    createProject,
   };
 }

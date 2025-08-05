@@ -210,14 +210,14 @@ export default function PrintHook() {
           new TextRun({ text: '• ', bold: true }),
           new TextRun({ text: 'Áreas: ', bold: true, size: 28 }),
           new TextRun({
-            text: project.areasxProyecto.length ? '' : 'Sin áreas',
+            text: project.areasxProyecto?.length ? '' : 'Sin áreas',
             size: 26,
           }),
         ],
         spacing: { after: 100 },
       }),
 
-      ...project.areasxProyecto.map(
+      ...(project.areasxProyecto ?? []).map(
         (area: any) =>
           new Paragraph({
             children: [
@@ -233,14 +233,14 @@ export default function PrintHook() {
           new TextRun({ text: '• ', bold: true }),
           new TextRun({ text: 'Personal: ', bold: true, size: 28 }),
           new TextRun({
-            text: project.equipoxProyecto.length ? '' : 'Sin personal',
+            text: project.equipoxProyecto?.length ? '' : 'Sin personal',
             size: 26,
           }),
         ],
         spacing: { after: 100 },
       }),
 
-      ...project.equipoxProyecto.map(
+      ...(project.equipoxProyecto ?? []).map(
         (personal: any) =>
           new Paragraph({
             children: [

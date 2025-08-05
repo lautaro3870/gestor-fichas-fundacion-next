@@ -1,12 +1,29 @@
-'use client'
+'use client';
 import { CreateOrUpdateProject, Project } from '@/lib/interfaces';
 import CustomForm from '../components/CustomForm';
 import NavigationBar from '../components/NavigationBar';
+import ProyectosHook from '../proyectos/hooks/ProyectosHook';
+import Swal from 'sweetalert2';
 
 export default function NewProject() {
+  const { createProject } = ProyectosHook();
+
   const handleFormData = (formData: CreateOrUpdateProject) => {
-    console.log(formData);
-  }
+    createProject(formData)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Proyecto creado',
+        });
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al insertar el proyecto',
+        });
+      });
+  };
+  
   return (
     <>
       <nav>
