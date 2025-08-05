@@ -301,3 +301,54 @@ export const FORM_INPUTS_FIFTH_SECTION = [
     sizes: SIZES_FIFTH_SECTION,
   },
 ];
+
+export const FORM_INPUTS_SIXTH_SECTION = [
+  {
+    id: 'certConformidad',
+    label: 'Certificado Conformidad',
+    name: 'certConformidad',
+    required: false,
+    type: 'checkbox',
+    sizes: {
+      xl: 4,
+      lg: 4,
+      md: 2,
+      sm: 2,
+    },
+  },
+  {
+    id: 'fichaLista',
+    label: 'Ficha lista',
+    name: 'fichaLista',
+    required: false,
+    type: 'checkbox',
+    sizes: {
+      xl: 4,
+      lg: 4,
+      md: 2,
+      sm: 2,
+    },
+  },
+  {
+    id: 'certificadoPor',
+    label: 'Certificado',
+    name: 'certificadoPor',
+    required: false,
+    type: 'select',
+    sizes: {
+      xl: 4,
+      lg: 4,
+      md: 2,
+      sm: 2,
+    },
+    options: [
+      { id: -1, value: 'Seleccione' },
+      { id: 0, value: 'Landaveri, Raúl' },
+      { id: 1, value: 'Lallana, Francisco' },
+      { id: 2, value: 'Nadal, Gustavo' },
+      { id: 3, value: 'Di Sbroiavacca, Nicolás' },
+      { id: 4, value: 'Dubrovsky, Hilda' },
+      { id: 5, value: 'Recalde, Marina' },
+    ],
+  },
+];

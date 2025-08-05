@@ -4,6 +4,7 @@ import {
   FORM_INPUTS_FIRST_SECTION,
   FORM_INPUTS_FOURTH_SECTION,
   FORM_INPUTS_SECOND_SECTION,
+  FORM_INPUTS_SIXTH_SECTION,
   FORM_INPUTS_THIRD_SECTION,
 } from '@/lib/constants';
 import {
@@ -20,6 +21,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   Grid,
   InputLabel,
   MenuItem,
@@ -67,6 +69,9 @@ export default function CustomForm({
     CreatePersonal[] | undefined
   >(personal);
 
+  const [isProjectReady, setIsProjectReady] = useState(false);
+  const [errorSelect, setErrorSelect] = useState('');
+
   useEffect(() => {
     setFormData(formData);
     setProjectData(project);
@@ -97,6 +102,10 @@ export default function CustomForm({
       areas: areasList?.map((a: any) => ({ idArea: a.area.id })) || [],
       equipo: personalList || [],
     };
+    if (!rest.certificadoPor && rest.fichaLista) {
+      setErrorSelect('Seleccione un validador');
+      return;
+    }
     handleFormData(projectObject);
   };
 
@@ -111,7 +120,12 @@ export default function CustomForm({
   }: InputProps) => {
     if (type === 'select') {
       return (
-        <FormControl fullWidth size="small" key={index}>
+        <FormControl
+          fullWidth
+          size="small"
+          key={index}
+          error={name === 'certificadoPor' ? Boolean(errorSelect) : false}
+        >
           <InputLabel>{label}</InputLabel>
           <Select
             fullWidth
@@ -119,9 +133,13 @@ export default function CustomForm({
             name={name}
             label={label}
             value={projectData[name as keyof Project] ?? ''}
-            onChange={(e) =>
-              setProjectData((prev) => ({ ...prev, [name]: e.target.value }))
-            }
+            disabled={name === 'certificadoPor' ? !isProjectReady : false}
+            onChange={(e) => {
+              if (name === 'certificadoPor') {
+                setErrorSelect('');
+              }
+              setProjectData((prev) => ({ ...prev, [name]: e.target.value }));
+            }}
           >
             {options.map(({ id, value }, idx) => (
               <MenuItem key={idx} value={id}>
@@ -129,6 +147,9 @@ export default function CustomForm({
               </MenuItem>
             ))}
           </Select>
+          {Boolean(errorSelect) ? (
+            <FormHelperText>{errorSelect}</FormHelperText>
+          ) : null}
         </FormControl>
       );
     }
@@ -140,12 +161,19 @@ export default function CustomForm({
             <Checkbox
               name={name}
               value={projectData[name as keyof Project] ?? false}
-              onChange={(e) =>
+              onChange={(e) => {
+                if (name === 'fichaLista') {
+                  setErrorSelect('');
+                  setIsProjectReady(e.target.checked);
+                  if (!e.target.checked) {
+                    projectData['certificadoPor'] = -1;
+                  }
+                }
                 setProjectData((prev) => ({
                   ...prev,
                   [name]: e.target.checked,
-                }))
-              }
+                }));
+              }}
             />
           }
           label={label}
@@ -406,6 +434,37 @@ export default function CustomForm({
               />
             </Box>
           </Grid>
+
+          <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
+            <hr style={{ border: '0.1rem solid rgba(0,0,0,0.2)' }} />
+          </Grid>
+
+          {FORM_INPUTS_SIXTH_SECTION.map(
+            (
+              {
+                id,
+                label,
+                required,
+                name,
+                type,
+                options,
+                sizes: { lg, md, xl, sm },
+              },
+              index
+            ) => (
+              <Grid size={{ xl, lg, md, sm }} key={index}>
+                {_getInputType({
+                  type,
+                  index,
+                  label,
+                  name,
+                  id,
+                  options,
+                  required,
+                })}
+              </Grid>
+            )
+          )}
 
           <Grid
             size={{ xs: 12 }}
