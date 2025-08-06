@@ -107,7 +107,7 @@ export interface CreateOrUpdateProject {
   enCurso: boolean;
   certConformidad: boolean;
   certificadoPor: number;
-  activo: boolean;
+  activo?: boolean;
   link: string;
   convenio: boolean;
   pdf: string;
@@ -115,6 +115,7 @@ export interface CreateOrUpdateProject {
   isbn: string;
   cita: string;
   revista: string;
+  __typename?: string;
   areas: Array<{ idArea: number }>;
   equipo: CreatePersonal[];
 }

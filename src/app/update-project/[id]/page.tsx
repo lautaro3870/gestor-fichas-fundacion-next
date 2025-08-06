@@ -44,7 +44,7 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
     equipoxProyecto: [],
   });
 
-  const { areasMapped } = ProyectosHook();
+  const { areasMapped, updateProject } = ProyectosHook();
 
   const router = useRouter();
 
@@ -55,7 +55,27 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
   });
 
   const handleFormData = (formData: CreateOrUpdateProject) => {
-    console.log(formData);
+    const finalFormData = {
+      ...formData,
+      id: parseInt(params.id)
+    };
+    delete finalFormData.activo;
+    delete finalFormData['__typename'];
+
+    updateProject({ ...finalFormData, id: parseInt(params.id) })
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Proyecto actualizado',
+        });
+      })
+      .catch((error: any) => {
+        console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error al insertar el proyecto',
+        });
+      });
   };
 
   useEffect(() => {
@@ -95,8 +115,8 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
             project={project}
             areas={project?.areasxProyecto}
             personal={project?.equipoxProyecto}
-            handleFormData={handleFormData}
             areasSelect={areasMapped}
+            handleFormData={handleFormData}
           />
         )}
       </main>

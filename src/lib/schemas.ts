@@ -306,3 +306,54 @@ export const CREATE_PROJECT = gql`
     }
   }
 `;
+
+export const UPDATE_PROJECT = gql`
+  mutation UpdateProject($updateProject: UpdateProject!) {
+    updateProject(updateProject: $updateProject) {
+      id
+      titulo
+      paisRegion
+      contratante
+      direccion
+      montoContrato
+      numeroContrato
+      mesInicio
+      anioInicio
+      mesFinalizacion
+      anioFinalizacion
+      consultoresAsociados
+      descripcion
+      resultados
+      fichaLista
+      enCurso
+      departamento
+      moneda
+      certConformidad
+      certificadoPor
+      activo
+      link
+      convenio
+      pdf
+      issn
+      isbn
+      cita
+      revista
+      areasxProyecto {
+        area {
+          id
+          area
+        }
+      }
+      equipoxProyecto {
+        personal {
+          id
+          nombre
+        }
+        consultorAsociado
+        coordinador
+        investigador
+        subCoordinador
+      }
+    }
+  }
+`;

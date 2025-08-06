@@ -35,6 +35,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import PersonalTable from './PersonalTable';
 import { useEffect, useState } from 'react';
 import CustomSelect from './Filter/CustomSelect';
+import Link from 'next/link';
 
 type CustomFormProps = {
   project: Project;
@@ -96,6 +97,7 @@ export default function CustomForm({
         subCoordinador: p.subCoordinador,
       }))
     );
+    setIsProjectReady(Boolean(project.fichaLista));
   }, [project, areas, personal]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -164,13 +166,16 @@ export default function CustomForm({
           control={
             <Checkbox
               name={name}
-              value={projectData[name as keyof Project] ?? false}
+              checked={Boolean(projectData[name as keyof Project])}
               onChange={(e) => {
                 if (name === 'fichaLista') {
                   setErrorSelect('');
                   setIsProjectReady(e.target.checked);
                   if (!e.target.checked) {
-                    projectData['certificadoPor'] = -1;
+                    setProjectData((prev) => ({
+                      ...prev,
+                      certificadoPor: -1,
+                    }));
                   }
                 }
                 setProjectData((prev) => ({
@@ -276,12 +281,14 @@ export default function CustomForm({
     const areaMapped = {
       id: areaSelected?.id ? +areaSelected.id : 0,
       area: areaSelected?.value || '',
-      activo: true
+      activo: true,
     };
 
-    setAreasList(
-      areasList ? [...areasList, areaMapped] : [areaMapped]
-    );
+    const areaFind = areasList?.find((a: any) => a.id === areaMapped.id);
+    if (areaFind) {
+      return;
+    }
+    setAreasList(areasList ? [...areasList, areaMapped] : [areaMapped]);
   };
 
   return (
@@ -507,14 +514,16 @@ export default function CustomForm({
             <Button variant="contained" type="submit">
               Guardar
             </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{ marginLeft: '2rem' }}
-              type="button"
-            >
-              Cancelar
-            </Button>
+            <Link href={'/proyectos'}>
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ marginLeft: '2rem' }}
+                type="button"
+              >
+                Cancelar
+              </Button>
+            </Link>
           </Grid>
         </Grid>
       </form>

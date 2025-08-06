@@ -11,6 +11,7 @@ import {
   DELETE_PROJECT,
   GET_AREAS,
   GET_PROJECTS_FILTERED,
+  UPDATE_PROJECT,
 } from '@/lib/schemas';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 
@@ -61,6 +62,7 @@ export default function ProyectosHook() {
 
   const [deleteProject] = useMutation(DELETE_PROJECT);
   const [creatProjectMutation] = useMutation(CREATE_PROJECT);
+  const [updateProjectMutation] = useMutation(UPDATE_PROJECT);
 
   const getProjectsFiltered = async (newFilter: FilterInterface) => {
     const response = await getProjects({
@@ -174,6 +176,14 @@ export default function ProyectosHook() {
     });
   };
 
+  const updateProject = async (formData: CreateOrUpdateProject) => {
+    await updateProjectMutation({
+      variables: {
+        updateProject: formData,
+      },
+    });
+  };
+
   return {
     projects,
     filter,
@@ -184,5 +194,6 @@ export default function ProyectosHook() {
     handleDeleteProject,
     printOneProject,
     createProject,
+    updateProject,
   };
 }
