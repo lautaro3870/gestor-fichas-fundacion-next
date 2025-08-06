@@ -1,4 +1,8 @@
-import { CustomSelectInterface, FilterInterface, Project } from '@/lib/interfaces';
+import {
+  CustomSelectInterface,
+  FilterInterface,
+  Project,
+} from '@/lib/interfaces';
 import {
   Button,
   FormControl,
@@ -7,7 +11,13 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { Dispatch, lazy, SetStateAction, useEffect, useRef, useState } from 'react';
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import CustomSelect from './CustomSelect';
 import PrintIcon from '@mui/icons-material/Print';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -29,7 +39,7 @@ export default function Filter({
   areasMapped,
   departamentos,
   getProjectsFiltered,
-  projects
+  projects,
 }: FilterProps) {
   const [departamento, setDepartamento] = useState('');
   const [areas, setAreas] = useState<CustomSelectInterface[]>([]);
@@ -140,8 +150,8 @@ export default function Filter({
   }, []);
 
   const printProjects = () => {
-    printProjectsHook(projects)
-  }
+    printProjectsHook(projects);
+  };
 
   return (
     <form
@@ -221,6 +231,8 @@ export default function Filter({
         selectName="departamento"
         selectValue={departamento}
         selectItems={departamentos}
+        sizes={{ xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' }}
+        isFromForm={false}
         handleSelectChange={handleSelectChange}
       />
       <CustomSelect
@@ -228,6 +240,8 @@ export default function Filter({
         selectName="areas"
         selectValue={areas || []}
         selectItems={areasMapped}
+        sizes={{ xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' }}
+        isFromForm={false}
         handleSelectChange={handleSelectChange}
       />
       <FormControl size="small">

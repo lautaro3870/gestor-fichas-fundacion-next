@@ -6,7 +6,7 @@ import ProyectosHook from '../proyectos/hooks/ProyectosHook';
 import Swal from 'sweetalert2';
 
 export default function NewProject() {
-  const { createProject } = ProyectosHook();
+  const { createProject, areasMapped } = ProyectosHook();
 
   const handleFormData = (formData: CreateOrUpdateProject) => {
     createProject(formData)
@@ -34,6 +34,7 @@ export default function NewProject() {
           project={{} as Project}
           areas={[]}
           personal={[]}
+          areasSelect={areasMapped}
           handleFormData={handleFormData}
         />
       </main>

@@ -12,6 +12,7 @@ import {
   Column,
   CreateOrUpdateProject,
   CreatePersonal,
+  CustomSelectInterface,
   PersonalInterface,
   Project,
 } from '@/lib/interfaces';
@@ -33,11 +34,13 @@ import CustomTable from './CustomTable';
 import DeleteIcon from '@mui/icons-material/Delete';
 import PersonalTable from './PersonalTable';
 import { useEffect, useState } from 'react';
+import CustomSelect from './Filter/CustomSelect';
 
 type CustomFormProps = {
   project: Project;
   areas: Area[] | undefined;
   personal: PersonalInterface[] | undefined;
+  areasSelect: CustomSelectInterface[];
   handleFormData: (formData: CreateOrUpdateProject) => void;
 };
 
@@ -57,6 +60,7 @@ export default function CustomForm({
   project,
   areas,
   personal,
+  areasSelect,
   handleFormData,
 }: CustomFormProps) {
   const [projectData, setProjectData] = useState<Project>({} as Project);
@@ -99,7 +103,7 @@ export default function CustomForm({
     const { areasxProyecto, equipoxProyecto, ...rest } = projectData;
     const projectObject: CreateOrUpdateProject = {
       ...rest,
-      areas: areasList?.map((a: any) => ({ idArea: a.area.id })) || [],
+      areas: areasList?.map((a: any) => ({ idArea: a.id })) || [],
       equipo: personalList || [],
     };
     if (!rest.certificadoPor && rest.fichaLista) {
@@ -264,6 +268,22 @@ export default function CustomForm({
     );
   };
 
+  const handleSelectChange = (e: any) => {
+    if (!e) {
+      return;
+    }
+    const areaSelected = areasSelect?.find((a: any) => a.id === e);
+    const areaMapped = {
+      id: areaSelected?.id ? +areaSelected.id : 0,
+      area: areaSelected?.value || '',
+      activo: true
+    };
+
+    setAreasList(
+      areasList ? [...areasList, areaMapped] : [areaMapped]
+    );
+  };
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -422,6 +442,20 @@ export default function CustomForm({
           <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
             <hr style={{ border: '0.1rem solid rgba(0,0,0,0.2)' }} />
             <Typography variant="h6">Áreas</Typography>
+          </Grid>
+
+          <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
+            <Box>
+              <CustomSelect
+                inputLabel="Áreas"
+                selectName="areas"
+                selectValue={[]}
+                selectItems={areasSelect}
+                sizes={{ xs: '100%', sm: '20rem', md: '20rem', lg: '30rem' }}
+                isFromForm={true}
+                handleSelectChange={handleSelectChange}
+              />
+            </Box>
           </Grid>
 
           <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>

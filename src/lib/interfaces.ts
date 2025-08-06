@@ -39,7 +39,7 @@ export interface ErrorInput {
 
 export interface CustomSelectInterface {
   id: string | number;
-  value: string | boolean;
+  value: string;
 }
 
 export interface FilterInterface {

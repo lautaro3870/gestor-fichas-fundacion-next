@@ -1,4 +1,4 @@
-import { CustomSelectInterface } from '@/lib/interfaces';
+import { Area, CustomSelectInterface } from '@/lib/interfaces';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 type CustomSelectProps = {
@@ -9,9 +9,12 @@ type CustomSelectProps = {
     | CustomSelectInterface[]
     | boolean
     | null
-    | undefined;
+    | undefined
+    | Area[];
   selectName: string;
   selectItems: CustomSelectInterface[];
+  sizes: { lg: string; md: string; sm: string; xs: string };
+  isFromForm: boolean;
   handleSelectChange: (e: any, selectName: string) => void;
 };
 
@@ -31,19 +34,22 @@ export default function CustomSelect({
   selectItems,
   selectName,
   selectValue,
+  sizes,
+  isFromForm,
   handleSelectChange,
 }: CustomSelectProps) {
+  const { lg, md, xs, sm } = sizes;
   return (
     <FormControl size="small">
       <InputLabel>{inputLabel}</InputLabel>
       <Select
-        sx={{ width: { xs: '100%', sm: '8rem', md: '8rem', lg: '10rem' } }}
+        sx={{ width: { xs, sm, md, lg } }}
         size="small"
         name={selectName}
         value={selectValue || ''}
         onChange={(e: any) => handleSelectChange(e.target.value, selectName)}
         label={selectName}
-        multiple={selectName === 'areas'}
+        multiple={isFromForm ? false : selectName === 'areas'}
         MenuProps={MenuProps}
       >
         <MenuItem key={-1} value="">

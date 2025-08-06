@@ -8,6 +8,7 @@ import { CreateOrUpdateProject, Project } from '@/lib/interfaces';
 import { CircularProgress } from '@mui/material';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
+import ProyectosHook from '@/app/proyectos/hooks/ProyectosHook';
 
 export default function UpdateProject({ params }: { params: { id: string } }) {
   const [project, setProject] = useState<Project>({
@@ -42,6 +43,8 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
     revista: '',
     equipoxProyecto: [],
   });
+
+  const { areasMapped } = ProyectosHook();
 
   const router = useRouter();
 
@@ -93,6 +96,7 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
             areas={project?.areasxProyecto}
             personal={project?.equipoxProyecto}
             handleFormData={handleFormData}
+            areasSelect={areasMapped}
           />
         )}
       </main>
