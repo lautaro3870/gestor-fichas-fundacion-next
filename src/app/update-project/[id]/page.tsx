@@ -44,7 +44,7 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
     equipoxProyecto: [],
   });
 
-  const { areasMapped, updateProject } = ProyectosHook();
+  const { areasMapped, updateProject, personalesMapped } = ProyectosHook();
 
   const router = useRouter();
 
@@ -57,7 +57,7 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
   const handleFormData = (formData: CreateOrUpdateProject) => {
     const finalFormData = {
       ...formData,
-      id: parseInt(params.id)
+      id: parseInt(params.id),
     };
     delete finalFormData.activo;
     delete finalFormData['__typename'];
@@ -116,6 +116,7 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
             areas={project?.areasxProyecto}
             personal={project?.equipoxProyecto}
             areasSelect={areasMapped}
+            personalesSelect={personalesMapped}
             handleFormData={handleFormData}
           />
         )}

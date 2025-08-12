@@ -2,11 +2,11 @@
 import { Button } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { PersonalInterface } from '@/lib/interfaces';
+import { CreatePersonal, PersonalInterface } from '@/lib/interfaces';
 import { useEffect, useState } from 'react';
 
 type PersonalTableProps = {
-  personal: PersonalInterface[] | undefined;
+  personal: PersonalInterface[] | CreatePersonal[] | undefined;
   onUpdatePersonalList: (PersonalInterface: any) => void;
 };
 
@@ -18,12 +18,8 @@ export default function PersonalTable({
     PersonalInterface[] | undefined
   >([]);
 
-  // useEffect(() => {
-  //   setPersonalList(personal);
-  // }, [personal]);
-
   const handleDeletePersonal = (id: number) => {
-    const newList = personalList?.filter((p: any) => p.personal.id !== id);
+    const newList = personalList?.filter((p: any) => p.idPersonal !== id);
     setPersonalList(newList);
     onUpdatePersonalList(newList);
   };
@@ -35,7 +31,7 @@ export default function PersonalTable({
     const changedValue = newRow[changedField];
 
     const newList = personalList?.map((p: any) => {
-      if (p.personal.id === newRow.id) {
+      if (p.idPersonal === newRow.id) {
         return {
           ...p,
           [changedField]: changedValue,
@@ -50,7 +46,7 @@ export default function PersonalTable({
   };
 
   useEffect(() => {
-    setPersonalList(personal);
+    setPersonalList(personal?.map((p: any) => ({ ...p, activo: true })));
   }, [personal]);
 
   const columns: GridColDef[] = [
@@ -110,8 +106,8 @@ export default function PersonalTable({
   ];
 
   const rows = personalList?.map((p: any) => ({
-    id: p.personal.id,
-    nombre: p.personal.nombre,
+    id: p.idPersonal,
+    nombre: p.nombre,
     consultorAsociado: p.consultorAsociado,
     coordinador: p.coordinador,
     subCoordinador: p.subCoordinador,

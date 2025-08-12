@@ -14,7 +14,7 @@ export interface Column {
 }
 
 export interface PersonalInterface {
-  id: number;
+  idPersonal: number;
   nombre: string;
   consultorAsociado: boolean;
   coordinador: boolean;
@@ -24,8 +24,7 @@ export interface PersonalInterface {
 }
 
 export interface CreatePersonal {
-  id: number;
-  nombre: string;
+  idPersonal: number;
   consultorAsociado: boolean;
   coordinador: boolean;
   investigador: boolean;

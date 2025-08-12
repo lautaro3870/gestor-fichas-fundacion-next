@@ -42,6 +42,7 @@ type CustomFormProps = {
   areas: Area[] | undefined;
   personal: PersonalInterface[] | undefined;
   areasSelect: CustomSelectInterface[];
+  personalesSelect: CustomSelectInterface[];
   handleFormData: (formData: CreateOrUpdateProject) => void;
 };
 
@@ -62,6 +63,7 @@ export default function CustomForm({
   areas,
   personal,
   areasSelect,
+  personalesSelect,
   handleFormData,
 }: CustomFormProps) {
   const [projectData, setProjectData] = useState<Project>({} as Project);
@@ -89,12 +91,13 @@ export default function CustomForm({
     );
     setPersonalList(
       personal?.map((p: any) => ({
-        id: p.personal.id,
+        idPersonal: p.personal.id,
         nombre: p.personal.nombre,
         consultorAsociado: p.consultorAsociado,
         coordinador: p.coordinador,
         investigador: p.investigador,
         subCoordinador: p.subCoordinador,
+        activo: true,
       }))
     );
     setIsProjectReady(Boolean(project.fichaLista));
@@ -103,10 +106,17 @@ export default function CustomForm({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const { areasxProyecto, equipoxProyecto, ...rest } = projectData;
+    const finalListPersonal = personalList?.map((p: any) => ({
+      idPersonal: p.idPersonal,
+      consultorAsociado: p.consultorAsociado,
+      subCoordinador: p.subCoordinador,
+      investigador: p.investigador,
+      coordinador: p.coordinador
+    }));
     const projectObject: CreateOrUpdateProject = {
       ...rest,
       areas: areasList?.map((a: any) => ({ idArea: a.id })) || [],
-      equipo: personalList || [],
+      equipo: finalListPersonal || [],
     };
     if (!rest.certificadoPor && rest.fichaLista) {
       setErrorSelect('Seleccione un validador');
@@ -263,8 +273,8 @@ export default function CustomForm({
   const onUpdatePersonalList = (personal: any) => {
     setPersonalList(
       personal.map((p: any) => ({
-        id: p.personal.id,
-        nombre: p.personal.nombre,
+        idPersonal: p.idPersonal,
+        nombre: p.nombre,
         consultorAsociado: p.consultorAsociado,
         coordinador: p.coordinador,
         investigador: p.investigador,
@@ -289,6 +299,25 @@ export default function CustomForm({
       return;
     }
     setAreasList(areasList ? [...areasList, areaMapped] : [areaMapped]);
+  };
+
+  const handlePersonalSelectChange = (e: any) => {
+    const personalSelected = personalesSelect.find((p: any) => p.id === e);
+    if (personalSelected) {
+      const personalFind = personalList?.find((p: any) => p.idPersonal === e);
+      if (personalFind) return;
+      const personalMapped = {
+        idPersonal: +personalSelected?.id,
+        nombre: personalSelected?.value,
+        consultorAsociado: false,
+        coordinador: false,
+        investigador: false,
+        subCoordinador: false,
+      };
+      setPersonalList(
+        personalList ? [...personalList, personalMapped] : [personalMapped]
+      );
+    }
   };
 
   return (
@@ -437,10 +466,24 @@ export default function CustomForm({
             <Typography variant="h6">Autores</Typography>
           </Grid>
 
+          <Grid size={{ xl: 12, lg: 12, md: 12, sm: 12 }}>
+            <Box>
+              <CustomSelect
+                inputLabel="Personal"
+                selectName="personal"
+                selectValue={[]}
+                selectItems={personalesSelect}
+                sizes={{ xs: '100%', sm: '20rem', md: '20rem', lg: '30rem' }}
+                isFromForm={true}
+                handleSelectChange={handlePersonalSelectChange}
+              />
+            </Box>
+          </Grid>
+
           <Grid size={{ xl: 12, lg: 12, md: 12 }}>
             <Box>
               <PersonalTable
-                personal={personal}
+                personal={personalList}
                 onUpdatePersonalList={onUpdatePersonalList}
               />
             </Box>

@@ -41,7 +41,7 @@ export default function PersonalHook() {
 
   const handleEditPersonal = async (id: number) => {
     const { nombre } = data.getPersonal.find(
-      (p: PersonalInterface) => p.id === id
+      (p: any) => p.id === id
     );
 
     Swal.fire({
@@ -71,6 +71,7 @@ export default function PersonalHook() {
           },
         });
         setPersonales(response.data.updatePersonal);
+        setPersonalesFiltrados(response.data.updatePersonal);
       },
     });
   };
@@ -81,8 +82,14 @@ export default function PersonalHook() {
         variables: {
           deletePersonalId: id,
         },
+        fetchPolicy: 'network-only',
       });
       setPersonales(response.data.deletePersonal);
+      setPersonalesFiltrados(response.data.deletePersonal);
+      Swal.fire({
+        icon: 'error',
+        title: 'Personal eliminado',
+      });
     } catch (err) {
       Swal.fire({
         icon: 'info',
@@ -115,9 +122,15 @@ export default function PersonalHook() {
             foto: '',
           },
         },
+        fetchPolicy: 'network-only',
       });
       setPersonales(response.data.createPersonal);
+      setPersonalesFiltrados(response.data.createPersonal);
       setPersonal('');
+      Swal.fire({
+        icon: 'success',
+        title: 'Personal añadido',
+      });
     } catch {
       setErrorInput({
         errorInput: true,
@@ -136,7 +149,7 @@ export default function PersonalHook() {
 
   const handleSearch = (e: any) => {
     const { value } = e.target;
-    
+
     if (value.trim() === '') {
       setPersonalesFiltrados(personales);
       return;
@@ -174,6 +187,6 @@ export default function PersonalHook() {
     handleEditPersonal,
     handleDeletePersonal,
     handleSearch,
-    personalesFiltrados
+    personalesFiltrados,
   };
 }

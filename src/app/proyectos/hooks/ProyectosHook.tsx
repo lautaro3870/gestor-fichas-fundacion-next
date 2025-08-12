@@ -10,6 +10,7 @@ import {
   CREATE_PROJECT,
   DELETE_PROJECT,
   GET_AREAS,
+  GET_PERSONALES,
   GET_PROJECTS_FILTERED,
   UPDATE_PROJECT,
 } from '@/lib/schemas';
@@ -23,6 +24,10 @@ import PrintHook from './PrintHook';
 export default function ProyectosHook() {
   const [projects, setProjects] = useState([]);
   const [areasMapped, setAreasMapped] = useState<CustomSelectInterface[]>([]);
+  const [personalesMapped, setPersonaleMapped] = useState<
+    CustomSelectInterface[]
+  >([]);
+
   const [filter, setFilter] = useState<FilterInterface>({
     departamento: null,
     anioFinalizacion: null,
@@ -59,6 +64,8 @@ export default function ProyectosHook() {
   ] = useLazyQuery(GET_PROJECTS_FILTERED);
 
   const { data: dataAreas, loading: loadingAreas } = useQuery(GET_AREAS);
+  const { data: dataPersonales, loading: loadingPersonales } =
+    useQuery(GET_PERSONALES);
 
   const [deleteProject] = useMutation(DELETE_PROJECT);
   const [creatProjectMutation] = useMutation(CREATE_PROJECT);
@@ -75,6 +82,13 @@ export default function ProyectosHook() {
       setProjects(response.data.filterProjects);
     }
     if (response.error) {
+      if (response.error.cause?.message === 'Unauthorized') {
+        Swal.fire({
+          icon: 'info',
+          title: 'Sesión expirada',
+        }).then(() => router.push('/login'));
+        return;
+      }
       Swal.fire({
         icon: 'error',
         title: 'Error al recuperar los proyectos',
@@ -131,6 +145,15 @@ export default function ProyectosHook() {
         })
       );
       setAreasMapped(finalAreas);
+    }
+
+    if (!loadingPersonales && dataPersonales.getPersonal) {
+      const finalList: CustomSelectInterface[] =
+        dataPersonales?.getPersonal.map((a: any) => ({
+          id: a.id,
+          value: a.nombre,
+        }));
+      setPersonaleMapped(finalList);
     }
   }, [loadingProjects, errorProjects, dataProjects, loadingAreas, dataAreas]);
 
@@ -195,5 +218,6 @@ export default function ProyectosHook() {
     printOneProject,
     createProject,
     updateProject,
+    personalesMapped,
   };
 }
