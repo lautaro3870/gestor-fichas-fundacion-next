@@ -8,7 +8,8 @@ import { CreateOrUpdateProject, Project } from '@/lib/interfaces';
 import { CircularProgress } from '@mui/material';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
-import ProyectosHook from '@/app/proyectos/hooks/ProyectosHook';
+import MutationsProjectHook from '@/hooks/MutationsProjectHook';
+import { useAppContext } from '@/context';
 
 export default function UpdateProject({ params }: { params: { id: string } }) {
   const [project, setProject] = useState<Project>({
@@ -44,8 +45,8 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
     equipoxProyecto: [],
   });
 
-  const { areasMapped, updateProject, personalesMapped } = ProyectosHook();
-
+  const { areasMapped, personalesMapped } = useAppContext();
+  const { updateProject } = MutationsProjectHook();
   const router = useRouter();
 
   const { data, loading, error } = useQuery(GET_ONE_PROJECT, {
@@ -70,11 +71,18 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
         });
       })
       .catch((error: any) => {
-        console.log(error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error al insertar el proyecto',
-        });
+        if (error.cause.message === 'Unauthorized') {
+          Swal.fire({
+            icon: 'info',
+            title: 'Sesión expirada',
+          }).then(() => router.push('/login'));
+          return;
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error al insertar el proyecto',
+          });
+        }
       });
   };
 
@@ -90,7 +98,6 @@ export default function UpdateProject({ params }: { params: { id: string } }) {
     }
   }, [loading, data, error]);
 
-  // ver de hacer el mapeo de area y personal aca
   return (
     <>
       <nav>

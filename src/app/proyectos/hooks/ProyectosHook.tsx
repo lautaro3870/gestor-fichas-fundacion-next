@@ -1,32 +1,26 @@
 'use client';
 import {
-  Area,
-  CreateOrUpdateProject,
   CustomSelectInterface,
   FilterInterface,
   Project,
 } from '@/lib/interfaces';
 import {
-  CREATE_PROJECT,
   DELETE_PROJECT,
   GET_AREAS,
   GET_PERSONALES,
   GET_PROJECTS_FILTERED,
-  UPDATE_PROJECT,
 } from '@/lib/schemas';
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
-
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import PrintHook from './PrintHook';
+import { useAppContext } from '@/context';
 
 export default function ProyectosHook() {
+  const { setAreasMapped, setPersonaleMapped } = useAppContext();
+
   const [projects, setProjects] = useState([]);
-  const [areasMapped, setAreasMapped] = useState<CustomSelectInterface[]>([]);
-  const [personalesMapped, setPersonaleMapped] = useState<
-    CustomSelectInterface[]
-  >([]);
 
   const [filter, setFilter] = useState<FilterInterface>({
     departamento: null,
@@ -63,13 +57,15 @@ export default function ProyectosHook() {
     { loading: loadingProjects, error: errorProjects, data: dataProjects },
   ] = useLazyQuery(GET_PROJECTS_FILTERED);
 
-  const { data: dataAreas, loading: loadingAreas } = useQuery(GET_AREAS);
-  const { data: dataPersonales, loading: loadingPersonales } =
-    useQuery(GET_PERSONALES);
+  const { data: dataAreas, loading: loadingAreas } = useQuery(GET_AREAS, {
+    fetchPolicy: 'network-only',
+  });
+  const { data: dataPersonales, loading: loadingPersonales } = useQuery(
+    GET_PERSONALES,
+    { fetchPolicy: 'network-only' }
+  );
 
   const [deleteProject] = useMutation(DELETE_PROJECT);
-  const [creatProjectMutation] = useMutation(CREATE_PROJECT);
-  const [updateProjectMutation] = useMutation(UPDATE_PROJECT);
 
   const getProjectsFiltered = async (newFilter: FilterInterface) => {
     const response = await getProjects({
@@ -191,33 +187,13 @@ export default function ProyectosHook() {
     printOneProjectHook(project);
   };
 
-  const createProject = async (formData: CreateOrUpdateProject) => {
-    await creatProjectMutation({
-      variables: {
-        createProject: formData,
-      },
-    });
-  };
-
-  const updateProject = async (formData: CreateOrUpdateProject) => {
-    await updateProjectMutation({
-      variables: {
-        updateProject: formData,
-      },
-    });
-  };
-
   return {
     projects,
     filter,
     setFilter,
-    areasMapped,
     departamentos,
     getProjectsFiltered,
     handleDeleteProject,
     printOneProject,
-    createProject,
-    updateProject,
-    personalesMapped,
   };
 }

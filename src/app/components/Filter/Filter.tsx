@@ -17,7 +17,6 @@ import PrintIcon from '@mui/icons-material/Print';
 import ClearIcon from '@mui/icons-material/Clear';
 import SearchIcon from '@mui/icons-material/Search';
 import PrintHook from '@/app/proyectos/hooks/PrintHook';
-import ProyectosHook from '@/app/proyectos/hooks/ProyectosHook';
 
 type FilterProps = {
   filter: FilterInterface | null;

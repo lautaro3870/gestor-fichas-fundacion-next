@@ -10,18 +10,20 @@ import PrintIcon from '@mui/icons-material/Print';
 import Filter from '../components/Filter/Filter';
 import { Project } from '@/lib/interfaces';
 import Link from 'next/link';
+import { useAppContext } from '@/context';
 
 export default function Proyectos() {
   const {
     projects,
     filter,
     setFilter,
-    areasMapped,
     departamentos,
     getProjectsFiltered,
     handleDeleteProject,
     printOneProject,
   } = ProyectosHook();
+
+  const { areasMapped } = useAppContext();
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     {
@@ -29,7 +31,6 @@ export default function Proyectos() {
       headerName: 'Título',
       type: 'string',
       flex: 2,
-
       renderCell: (params) => (
         <Box
           sx={{
