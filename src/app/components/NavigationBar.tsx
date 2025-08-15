@@ -47,6 +47,7 @@ export default function NavigationBar() {
               height: '3rem',
               width: '10rem',
               marginRight: '3rem',
+              cursor: 'pointer'
             }}
             onClick={() => {
               router.push('/proyectos');

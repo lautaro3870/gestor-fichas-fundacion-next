@@ -77,7 +77,12 @@ export default function CustomForm({
   >(personal);
 
   const [isProjectReady, setIsProjectReady] = useState(false);
-  const [errorSelect, setErrorSelect] = useState('');
+  const [error, setError] = useState('');
+  const [errorYear, setErrorYear] = useState({
+    name: '',
+    error: false,
+    message: 'Año invalido',
+  });
 
   useEffect(() => {
     setFormData(formData);
@@ -105,21 +110,27 @@ export default function CustomForm({
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (error || errorYear.error) {
+      document.getElementById(errorYear.name)?.focus();
+      return;
+    }
     const { areasxProyecto, equipoxProyecto, ...rest } = projectData;
     const finalListPersonal = personalList?.map((p: any) => ({
       idPersonal: p.idPersonal,
       consultorAsociado: p.consultorAsociado,
       subCoordinador: p.subCoordinador,
       investigador: p.investigador,
-      coordinador: p.coordinador
+      coordinador: p.coordinador,
     }));
     const projectObject: CreateOrUpdateProject = {
       ...rest,
       areas: areasList?.map((a: any) => ({ idArea: a.id })) || [],
       equipo: finalListPersonal || [],
+      anioFinalizacion: rest.anioFinalizacion ? +rest.anioFinalizacion : null,
+      anioInicio: rest.anioInicio ? +rest.anioInicio : null,
     };
     if (!rest.certificadoPor && rest.fichaLista) {
-      setErrorSelect('Seleccione un validador');
+      setError('Seleccione un validador');
       return;
     }
     handleFormData(projectObject);
@@ -140,7 +151,7 @@ export default function CustomForm({
           fullWidth
           size="small"
           key={index}
-          error={name === 'certificadoPor' ? Boolean(errorSelect) : false}
+          error={name === 'certificadoPor' ? Boolean(error) : false}
         >
           <InputLabel>{label}</InputLabel>
           <Select
@@ -152,7 +163,7 @@ export default function CustomForm({
             disabled={name === 'certificadoPor' ? !isProjectReady : false}
             onChange={(e) => {
               if (name === 'certificadoPor') {
-                setErrorSelect('');
+                setError('');
               }
               setProjectData((prev) => ({ ...prev, [name]: e.target.value }));
             }}
@@ -163,9 +174,7 @@ export default function CustomForm({
               </MenuItem>
             ))}
           </Select>
-          {Boolean(errorSelect) ? (
-            <FormHelperText>{errorSelect}</FormHelperText>
-          ) : null}
+          {Boolean(error) ? <FormHelperText>{error}</FormHelperText> : null}
         </FormControl>
       );
     }
@@ -179,7 +188,7 @@ export default function CustomForm({
               checked={Boolean(projectData[name as keyof Project])}
               onChange={(e) => {
                 if (name === 'fichaLista') {
-                  setErrorSelect('');
+                  setError('');
                   setIsProjectReady(e.target.checked);
                   if (!e.target.checked) {
                     setProjectData((prev) => ({
@@ -226,9 +235,32 @@ export default function CustomForm({
         key={index}
         name={name}
         type={type}
+        error={name === errorYear.name ? errorYear.error : false}
+        helperText={name === errorYear.name ? errorYear.message : ''}
         onDoubleClick={(e: any) => {
           if (type === 'url') {
             window.open(e.target.value, '_blank');
+          }
+        }}
+        onBlur={(e: any) => {
+          if (name === 'anioInicio' || name === 'anioFinalizacion') {
+            const pattern = /^(1[0-9]{3}|2[0-9]{3})$/;
+            const test = pattern.test(e.target.value);
+            if (e.target.value) {
+              if (!test) {
+                setErrorYear({
+                  message: 'Año invalido',
+                  error: true,
+                  name,
+                });
+              } else {
+                setErrorYear({
+                  message: '',
+                  error: false,
+                  name,
+                });
+              }
+            }
           }
         }}
         value={projectData[name as keyof Project] ?? ''}

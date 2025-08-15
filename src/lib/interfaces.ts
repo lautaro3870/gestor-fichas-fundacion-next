@@ -42,14 +42,14 @@ export interface CustomSelectInterface {
 }
 
 export interface FilterInterface {
-  departamento: string | null;
-  anioFinalizacion: number | null;
-  anioInicio: number | null;
-  areas: CustomSelectInterface[] | null;
-  pais: string | null;
-  titulo: string | null;
-  link: boolean | null;
-  pdf: boolean | null;
+  departamento?: string | null;
+  anioFinalizacion?: number | null;
+  anioInicio?: number | null;
+  areas?: CustomSelectInterface[] | null;
+  pais?: string | null;
+  titulo?: string | null;
+  link?: boolean | null;
+  pdf?: boolean | null;
 }
 
 export interface Project {
@@ -89,8 +89,8 @@ export interface CreateOrUpdateProject {
   id?: number;
   titulo: string;
   paisRegion: string;
-  anioInicio: number;
-  anioFinalizacion: number;
+  anioInicio: number | null;
+  anioFinalizacion: number | null;
   montoContrato: string;
   moneda: string;
   departamento: string;

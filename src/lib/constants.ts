@@ -75,6 +75,10 @@ export const FORM_INPUTS_FIRST_SECTION = [
     sizes: SIZES_FIRST_SECTION,
     options: [
       {
+        id: '',
+        value: 'Seleccione',
+      },
+      {
         id: 'ENERGIA',
         value: 'Energía',
       },
@@ -120,6 +124,10 @@ export const FORM_INPUTS_SECOND_SECTION = [
     type: 'select',
     sizes: SIZES_SECOND_SECTION,
     options: [
+      {
+        id: '',
+        value: 'Seleccione',
+      },
       {
         id: 'USD',
         value: 'USD',
@@ -173,6 +181,7 @@ export const FORM_INPUTS_THIRD_SECTION = [
     type: 'select',
     sizes: SIZES_SECOND_SECTION,
     options: [
+      { id: -1, value: 'Seleccione' },
       { id: 0, value: 'Enero' },
       { id: 1, value: 'Febrero' },
       { id: 2, value: 'Marzo' },
@@ -203,6 +212,7 @@ export const FORM_INPUTS_THIRD_SECTION = [
     type: 'select',
     sizes: SIZES_SECOND_SECTION,
     options: [
+      { id: -1, value: 'Seleccione' },
       { id: 0, value: 'Enero' },
       { id: 1, value: 'Febrero' },
       { id: 2, value: 'Marzo' },
